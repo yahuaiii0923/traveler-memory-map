@@ -45,4 +45,9 @@ Run the following command to start the Laravel development server.
 
 php artisan serve
 
+
+## 👥 Authors
+
+- **Siew Ya Huai* – [GitHub](https://github.com/yahuaiii0923)
+- **Priyanka Achoki* – [GitHub](https://github.com/Priachoki)
 ```
