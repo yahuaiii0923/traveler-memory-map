@@ -2,7 +2,8 @@
 
 A Laravel web app that lets users map their travel memories, write notes, and upload photos. Built with Laravel, MySQL, and deployed on Microsoft Azure.
 
-## 🛠 Installation
+##file
+ 🛠 Installation
 
 ### 1. Clone the Repository
 
@@ -10,14 +11,13 @@ A Laravel web app that lets users map their travel memories, write notes, and up
 git clone https://github.com/yahuaiii0923/traveler-memory-map
 cd traveler-memory-map
 
-###2.Install Dependancies
-
 # Install PHP packages (Laravel, authentication, etc.)
 composer install
 
-# Install Dependencies
+# Install JavaScript dependencies (Tailwind CSS, map library, etc.)
 npm install
 npm run dev
+
 
 cp .env.example .env
 
@@ -35,7 +35,7 @@ DB_DATABASE=traveler_map_db
 DB_USERNAME=root
 DB_PASSWORD=
 
-###.Run the migrations
+###5.Run the migrations
 php artisan migrate
 
 php artisan db:seed
