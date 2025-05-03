@@ -7,20 +7,37 @@ use App\Models\Memory;
 
 class MemoryController extends Controller
 {
-    public function index()
-    {
-        $memories = Memory::all();
+   public function index()
+   {
+       // Step 1: Get the original full Eloquent collection
+       $allMemories = Memory::all();
 
-        // Group by creation year
-        $groupedMemories = $memories->groupBy(function ($memory) {
-            return $memory->created_at->year;
-        })->sortKeysDesc();
+       // Step 2: Create a mapped version for use in JavaScript
+       $memories = $allMemories->map(function ($memory) {
+           return [
+               'title' => $memory->title,
+               'description' => $memory->description,
+               'photo' => $memory->photo,
+               'location_name' => $memory->location_name,
+               'rating' => $memory->rating,
+               'latitude' => $memory->latitude,
+               'longitude' => $memory->longitude,
+               'created_at' => $memory->created_at->toDateTimeString(), // ✅ format for JS
+           ];
+       });
 
-        return view('memories.index', [
-            'memories' => $memories,
-            'groupedMemories' => $groupedMemories
-        ]);
-    }
+       // Step 3: Group the original collection by year
+       $groupedMemories = $allMemories->groupBy(function ($memory) {
+           return $memory->created_at->year;
+       })->sortKeysDesc();
+
+       // Step 4: Return view with both datasets
+       return view('memories.index', [
+           'memories' => $memories,
+           'groupedMemories' => $groupedMemories
+       ]);
+   }
+
 
     public function store(Request $request)
     {

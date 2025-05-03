@@ -109,6 +109,16 @@
         script.defer = true;
         document.head.appendChild(script);
     })();
+    document.querySelector("form").addEventListener("submit", function (e) {
+        const lat = document.getElementById('latitude').value;
+        const lng = document.getElementById('longitude').value;
+
+        if (!lat || !lng) {
+            e.preventDefault();
+            alert("Please select a valid location from the suggestions.");
+        }
+    });
+
 </script>
 
   </div>
