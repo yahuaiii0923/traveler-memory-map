@@ -65,4 +65,3 @@ public function create()
 {
     return view('memories.create');
 }
-}
