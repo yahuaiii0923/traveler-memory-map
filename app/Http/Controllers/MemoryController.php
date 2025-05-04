@@ -7,85 +7,61 @@ use App\Models\Memory;
 
 class MemoryController extends Controller
 {
-    /**
-     * Display a listing of the memories.
-     */
-    public function index()
-    {
-        $memories = Memory::where('user_id', auth()->id())->get();
-        return view('memories.index', compact('memories'));
-    }
+   public function index()
+   {
+       // Step 1: Get the original full Eloquent collection
+       $allMemories = Memory::all();
 
-    /**
-     * Show the form for creating a new memory.
-     */
-    public function create()
-    {
-        return view('memories.create');
-    }
+       // Step 2: Create a mapped version for use in JavaScript
+       $memories = $allMemories->map(function ($memory) {
+           return [
+               'title' => $memory->title,
+               'description' => $memory->description,
+               'photo' => $memory->photo,
+               'location_name' => $memory->location_name,
+               'rating' => $memory->rating,
+               'latitude' => $memory->latitude,
+               'longitude' => $memory->longitude,
+               'created_at' => $memory->created_at->toDateTimeString(), // ✅ format for JS
+           ];
+       });
 
-    /**
-     * Store a newly created memory in storage.
-     */
+       // Step 3: Group the original collection by year
+       $groupedMemories = $allMemories->groupBy(function ($memory) {
+           return $memory->created_at->year;
+       })->sortKeysDesc();
+
+       // Step 4: Return view with both datasets
+       return view('memories.index', [
+           'memories' => $memories,
+           'groupedMemories' => $groupedMemories
+       ]);
+   }
+
+
     public function store(Request $request)
     {
         $validated = $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'required|string',
+            'location_name' => 'required|string|max:255',
             'latitude' => 'required|numeric',
             'longitude' => 'required|numeric',
+            'photo' => 'nullable|image|max:2048', // 2MB max
+            'rating' => 'nullable|integer|min:1|max:5',
         ]);
 
-        Memory::create([
-            ...$validated,
-            'user_id' => auth()->id()
-        ]);
+        if ($request->hasFile('photo')) {
+            $path = $request->file('photo')->store('memories', 'public');
+            $validated['photo'] = $path;
+        }
 
-        return redirect()->route('memories.index')
-            ->with('success', 'Memory created successfully!');
+        $validated['user_id'] = auth()->id();
+        Memory::create($validated);
+
+        return redirect()->route('memories.index')->with('success', 'Memory saved!');
     }
-
-    /**
-     * Display the specified memory.
-     */
-    public function show(Memory $memory)
-    {
-        return view('memories.show', compact('memory'));
-    }
-
-    /**
-     * Show the form for editing the specified memory.
-     */
-    public function edit(Memory $memory)
-    {
-        return view('memories.edit', compact('memory'));
-    }
-
-    /**
-     * Update the specified memory in storage.
-     */
-    public function update(Request $request, Memory $memory)
-    {
-        $validated = $request->validate([
-            'title' => 'required|string|max:255',
-            'description' => 'required|string',
-            'latitude' => 'required|numeric',
-            'longitude' => 'required|numeric',
-        ]);
-
-        $memory->update($validated);
-
-        return redirect()->route('memories.index')
-            ->with('success', 'Memory updated successfully!');
-    }
-
-    /**
-     * Remove the specified memory from storage.
-     */
-    public function destroy(Memory $memory)
-    {
-        $memory->delete();
-        return redirect()->route('memories.index')
-            ->with('success', 'Memory deleted successfully!');
-    }
+public function create()
+{
+    return view('memories.create');
 }
