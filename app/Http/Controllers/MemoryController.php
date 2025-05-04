@@ -31,10 +31,18 @@ class MemoryController extends Controller
            return $memory->created_at->year;
        })->sortKeysDesc();
 
-       // Step 4: Return view with both datasets
+    // Step 4: Extract unique years
+        $years = $allMemories->pluck('created_at')
+                                ->map(fn($date) => \Carbon\Carbon::parse($date)->year)
+                                ->unique()
+                                ->sort()
+                                ->values();
+
+       // Step 5: Return view with both datasets
        return view('memories.index', [
            'memories' => $memories,
-           'groupedMemories' => $groupedMemories
+           'groupedMemories' => $groupedMemories,
+           'years' => $years
        ]);
    }
 
