@@ -8,8 +8,8 @@ class HomeController extends Controller
 {
     public function index()
     {
-        // Add any data you want to pass to the view
         return view('home', [
+            'googleMapsApiKey' => env('GOOGLE_MAPS_API_KEY'),
             'testimonials' => [
                 [
                     'name' => 'Sarah Johnson',

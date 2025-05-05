@@ -65,3 +65,10 @@ nav {
 [x-cloak] {
     display: none !important;
 }
+
+#travel-map {
+    height: 100%;
+    width: 100%;
+    min-height: 400px;
+    background-color: #dbd3c820;
+}

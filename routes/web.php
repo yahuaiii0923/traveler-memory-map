@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\MemoryController;
+use App\Http\Controllers\MapController;
 
 // Main route
 Route::get('/', [HomeController::class, 'index'])->name('home');
