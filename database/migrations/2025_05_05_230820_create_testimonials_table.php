@@ -14,9 +14,9 @@ return new class extends Migration
         Schema::create('testimonials', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('role')->nullable();
+            $table->string('role');
             $table->text('text');
-            $table->string('metric')->nullable();
+            $table->string('metric');
             $table->string('memory_slug')->nullable();
             $table->boolean('is_public')->default(true);
             $table->timestamps();

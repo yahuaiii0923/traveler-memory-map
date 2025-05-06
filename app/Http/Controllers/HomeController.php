@@ -11,7 +11,7 @@ class HomeController extends Controller
     {
         return view('home', [
             'googleMapsApiKey' => env('GOOGLE_MAPS_API_KEY'),
-            'testimonials' => Testimonial::where('is_public', true)->latest()->take(6)->get(),
+            'testimonials' => Testimonial::where('is_public', true)->latest()->take(3)->get(),
             'stats' => [
                 'memories' => '75K+',
                 'countries' => '164',
