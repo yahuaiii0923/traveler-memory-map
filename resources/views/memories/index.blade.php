@@ -1,201 +1,214 @@
 @extends('layouts.app')
+
 @section('content')
-
 <style>
-  .no-scrollbar::-webkit-scrollbar {
-    display: none;
-  }
-  .no-scrollbar {
-    -ms-overflow-style: none;
-    scrollbar-width: none;
-  }
+    .carousel-wrapper {
+        background-color: #1f2937; /* gray-800 */
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 0.5rem 0 1rem;
+        overflow-x: auto;
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+    }
 
-  #carouselWrapper::before,
-  #carouselWrapper::after {
-    content: "";
-    position: absolute;
-    top: 0;
-    width: 60px;
-    height: 100%;
-    z-index: 20;
-    pointer-events: none;
-  }
+    .carousel-wrapper::-webkit-scrollbar {
+        display: none;
+    }
 
-  #carouselWrapper::before {
-    left: 0;
-    background: linear-gradient(to right, #0f172a, transparent);
-  }
+    .carousel-track {
+        display: flex;
+        justify-content: center;
+        align-items: flex-end;
+        gap: 1.5rem;
+        height: 120px;
+        white-space: nowrap;
+        padding: 0 1rem;
+    }
 
-  #carouselWrapper::after {
-    right: 0;
-    background: linear-gradient(to left, #0f172a, transparent);
-  }
- #scrollLeftZone,
- #scrollRightZone {
-   opacity: 0;
-   background: transparent;
-   width: 24px; /* keep width for hover functionality */
-   height: 100%;
-   position: absolute;
-   top: 0;
-   z-index: 30;
-   pointer-events: auto;
- }
+    .year-button {
+        flex: 0 0 auto;
+        width: 56px;
+        height: 56px;
+        border-radius: 9999px;
+        background-color: #374151;
+        color: white;
+        font-weight: 600;
+        font-size: 0.8rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        scroll-snap-align: center;
+        pointer-events: auto;
+        position: relative;
+        transition: all 0.3s ease;
+
+        --angle: calc((var(--index) - ((var(--total) - 1) / 2)) * 12deg);
+        transform: rotate(var(--angle)) translateY(-50px) rotate(calc(-1 * var(--angle)));
+    }
+
+    .year-button:hover {
+        background-color: #4b5563;
+        transform: rotate(var(--angle)) translateY(-55px) rotate(calc(-1 * var(--angle))) scale(1.05);
+        z-index: 2;
+    }
+
+    .year-button.active {
+        background-color: #3b82f6;
+        box-shadow: 0 0 0 3px #3b82f6;
+        z-index: 3;
+    }
+
+    .year-button.active::after {
+        content: "";
+        position: absolute;
+        top: calc(100% + 5px);
+        left: 50%;
+        transform: translateX(-50%);
+        border-left: 6px solid transparent;
+        border-right: 6px solid transparent;
+        border-top: 6px solid #3b82f6;
+    }
 </style>
 
-<div class="container mx-auto p-0">
-  <h1 class="text-2xl font-bold mb-4 text-white">Your Travel Memories</h1>
-  <a href="{{ route('memories.create') }}" class="bg-blue-500 text-white px-4 py-2 rounded">Add Memory</a>
+<div class="w-full max-w-7xl mx-auto px-4 py-6">
+    <h1 class="text-2xl font-bold text-white mb-4">Your Travel Memories</h1>
+    <a href="{{ route('memories.create') }}" class="bg-blue-500 text-white px-4 py-2 rounded mb-6 inline-block">Add Memory</a>
 
-  <div class="mt-4">
-    <div id="map" class="w-full h-[calc(100vh-160px)]"></div>
-  </div>
-
-  <!-- Year Carousel -->
-  <div class="flex items-center justify-center py-6 relative z-10 bg-[#0f172a]">
-    <!-- All Years Button -->
-    <button onclick="showAllMarkers()"
-            class="px-6 py-3 border border-white rounded-full text-base font-semibold text-white bg-black year-button transition-transform duration-200 hover:scale-110 hover:ring-2 hover:ring-blue-400 mr-3">
-      All Years
-    </button>
-
-    <!-- Scrollable Container with Gradient Edges -->
-    <div id="carouselWrapper" class="relative w-[160px] overflow-hidden">
-      <div id="carouselScroll"
-           class="flex gap-4 transition-transform duration-300 ease-in-out whitespace-nowrap no-scrollbar overflow-x-auto scroll-smooth px-1">
-        @foreach ($years as $year)
-          <button onclick="filterMarkersByYear({{ $year }})"
-                  class="inline-block px-6 py-3 border border-white rounded-full text-base font-semibold text-white bg-black year-button transition-transform duration-200 hover:scale-110 hover:ring-2 hover:ring-blue-400">
-            {{ $year }}
-          </button>
-        @endforeach
-      </div>
-
-      <!-- Scroll zones -->
-      <div id="scrollLeftZone" class="absolute left-0 top-0 h-full w-6 z-30"></div>
-      <div id="scrollRightZone" class="absolute right-0 top-0 h-full w-6 z-30"></div>
-    </div>
-  </div>
+    <!-- Map -->
+    <div id="map" class="w-full h-[500px] md:h-[600px] lg:h-[700px] max-h-[80vh] overflow-hidden mb-4 rounded shadow relative"></div>
 </div>
 
-<!-- Google Map Logic -->
+<!-- Arc Carousel Below Map -->
+<div class="w-full max-w-7xl mx-auto px-4">
+    <div class="carousel-wrapper">
+        <div class="carousel-track">
+            <button class="year-button active" onclick="showAllMarkers()" id="all-years-btn" style="--index: 0; --total: {{ count($years) + 1 }};">
+                All
+            </button>
+            @foreach ($years as $index => $year)
+            <button class="year-button" onclick="filterMarkersByYear({{ $year }})" style="--index: {{ $index + 1 }}; --total: {{ count($years) + 1 }};">
+                {{ $year }}
+            </button>
+            @endforeach
+        </div>
+    </div>
+</div>
+
 <script>
-  let map;
-  let allMarkers = [];
+    let map;
+    let allMarkers = [];
+    let allYearsCenter;
+    let allYearsZoom;
 
-  function initMap() {
-    map = new google.maps.Map(document.getElementById("map"), {
-      zoom: 4,
-      center: { lat: 0, lng: 0 }
-    });
+    window.initMap = function () {
+        map = new google.maps.Map(document.getElementById("map"), {
+            zoom: 4,
+            center: { lat: 0, lng: 0 },
+            mapTypeControl: false,
+            fullscreenControl: false,
+            streetViewControl: false,
+            zoomControl: true
+        });
 
-    const memories = @json($memories);
-    const bounds = new google.maps.LatLngBounds();
+        setTimeout(() => {
+            google.maps.event.trigger(map, "resize");
+        }, 300);
 
-    allMarkers = memories.map(memory => {
-      const position = {
-        lat: parseFloat(memory.latitude),
-        lng: parseFloat(memory.longitude)
-      };
+        window.addEventListener("resize", () => {
+            google.maps.event.trigger(map, "resize");
+        });
 
-      const marker = new google.maps.Marker({
-        position: position,
-        map: map,
-        title: memory.title
-      });
+        const memories = {!! json_encode($memories) !!};
+        const bounds = new google.maps.LatLngBounds();
 
-      const infoWindow = new google.maps.InfoWindow({
-        content: `
-          <div class="bg-white rounded-xl shadow-lg p-6 max-w-md w-full">
-            <h3 class="text-xl font-bold text-gray-900 mb-3">${memory.title}</h3>
-            <p class="text-sm text-gray-700 mb-3">${memory.description}</p>
-            ${memory.photo ? `<img src="/storage/${memory.photo}" class="w-full h-52 object-cover rounded-md mb-3 border" alt="Memory photo">` : ''}
-            ${memory.location_name ? `<p class="text-sm text-gray-500 mb-1">📍 <em>${memory.location_name}</em></p>` : ''}
-            ${memory.rating ? `<p class="text-sm text-yellow-600 mb-2">⭐ <strong>Rating:</strong> ${memory.rating}/5</p>` : ''}
-            <p class="text-xs text-gray-400">🗓️ Added on ${new Date(memory.created_at).getFullYear()}</p>
-          </div>`
-      });
+        allMarkers = memories.map(memory => {
+            const position = {
+                lat: parseFloat(memory.latitude),
+                lng: parseFloat(memory.longitude)
+            };
 
-      marker.year = new Date(memory.created_at).getFullYear();
-      marker.addListener('click', () => infoWindow.open(map, marker));
-      bounds.extend(position);
-      return marker;
-    });
+            const marker = new google.maps.Marker({
+                position,
+                map,
+                title: memory.title
+            });
 
-    if (!bounds.isEmpty()) {
-      map.fitBounds(bounds);
-    }
-  }
+            const infoWindow = new google.maps.InfoWindow({
+                content: `
+                <div class='bg-white rounded-xl shadow-lg p-6 max-w-md w-full'>
+                    <h3 class='text-xl font-bold text-gray-900 mb-3'>${memory.title}</h3>
+                    <p class='text-sm text-gray-700 mb-3'>${memory.description}</p>
+                    ${memory.photo ? `<img src="/storage/${memory.photo}" class="w-full h-52 object-cover rounded-md mb-3 border" alt="Memory photo">` : ''}
+                    ${memory.location_name ? `<p class='text-sm text-gray-500 mb-1'>📍 <em>${memory.location_name}</em></p>` : ''}
+                    ${memory.rating ? `<p class='text-sm text-yellow-600 mb-2'>⭐ <strong>Rating:</strong> ${memory.rating}/5</p>` : ''}
+                    <p class='text-xs text-gray-400'>🗓️ Added on ${new Date(memory.created_at).getFullYear()}</p>
+                </div>`
+            });
 
-  function filterMarkersByYear(year) {
-    document.querySelectorAll('.year-button, .active-year').forEach(btn => {
-      btn.classList.remove('active-year', 'bg-blue-500', 'text-white');
-    });
-    event.target.classList.add('active-year');
+            marker.year = new Date(memory.created_at).getFullYear();
 
-    const bounds = new google.maps.LatLngBounds();
-    let hasVisible = false;
+            marker.addListener('click', () => {
+                const previousCenter = map.getCenter();
+                const previousZoom = map.getZoom();
 
-    allMarkers.forEach(marker => {
-      const visible = marker.year === year;
-      marker.setVisible(visible);
-      if (visible) bounds.extend(marker.getPosition());
-      hasVisible = hasVisible || visible;
-    });
+                infoWindow.open(map, marker);
 
-    if (hasVisible) {
-      map.fitBounds(bounds);
-      google.maps.event.addListenerOnce(map, 'idle', () => {
-        const visibleMarkers = allMarkers.filter(m => m.getVisible());
-        if (visibleMarkers.length === 1) {
-          map.setZoom(4);
+                // Recenter to ensure the InfoWindow is fully visible
+                map.panTo(marker.getPosition());
+                map.panBy(0, -100); // Move view slightly upward to accommodate popup
+
+                google.maps.event.addListenerOnce(infoWindow, 'closeclick', () => {
+                    map.setCenter(previousCenter);
+                    map.setZoom(previousZoom);
+                });
+            });
+
+
+            bounds.extend(position);
+            return marker;
+        });
+
+        if (!bounds.isEmpty()) {
+            map.fitBounds(bounds, 100);
+            google.maps.event.addListenerOnce(map, 'bounds_changed', () => {
+                allYearsCenter = map.getCenter();
+                allYearsZoom = map.getZoom();
+            });
         }
-      });
+    };
+
+    function filterMarkersByYear(year) {
+        document.querySelectorAll('.year-button').forEach(btn => btn.classList.remove('active'));
+        event.target.classList.add('active');
+
+        allMarkers.forEach(marker => {
+            marker.setVisible(marker.year === year);
+        });
+
+        if (allYearsCenter && allYearsZoom) {
+            map.setCenter(allYearsCenter);
+            map.setZoom(allYearsZoom);
+        }
     }
-  }
 
-  function showAllMarkers() {
-    document.querySelectorAll('.year-button, .active-year').forEach(btn => {
-      btn.classList.remove('active-year', 'bg-blue-500', 'text-white');
-    });
+    function showAllMarkers() {
+        document.querySelectorAll('.year-button').forEach(btn => btn.classList.remove('active'));
+        document.getElementById('all-years-btn').classList.add('active');
 
-    const allButton = document.querySelector('button[onclick="showAllMarkers()"]');
-    if (allButton) allButton.classList.add('active-year');
+        const bounds = new google.maps.LatLngBounds();
+        allMarkers.forEach(marker => {
+            marker.setVisible(true);
+            bounds.extend(marker.getPosition());
+        });
 
-    const bounds = new google.maps.LatLngBounds();
-    allMarkers.forEach(marker => {
-      marker.setVisible(true);
-      bounds.extend(marker.getPosition());
-    });
-
-    map.fitBounds(bounds);
-  }
-
-  window.initMap = initMap;
-</script>
-
-<!-- Hover Scroll Script -->
-<script>
-  const scrollContainer = document.getElementById('carouselScroll');
-  const leftZone = document.getElementById('scrollLeftZone');
-  const rightZone = document.getElementById('scrollRightZone');
-  let scrollInterval;
-
-  function startAutoScroll(direction) {
-    stopAutoScroll();
-    scrollInterval = setInterval(() => {
-      scrollContainer.scrollLeft += direction * 8; // ⬆️ Faster scroll speed
-    }, 10);
-  }
-
-  function stopAutoScroll() {
-    clearInterval(scrollInterval);
-  }
-
-  leftZone.addEventListener('mouseenter', () => startAutoScroll(-1));
-  rightZone.addEventListener('mouseenter', () => startAutoScroll(1));
-  leftZone.addEventListener('mouseleave', stopAutoScroll);
-  rightZone.addEventListener('mouseleave', stopAutoScroll);
+        map.fitBounds(bounds, 100);
+        google.maps.event.addListenerOnce(map, 'bounds_changed', () => {
+            allYearsCenter = map.getCenter();
+            allYearsZoom = map.getZoom();
+        });
+    }
 </script>
 
 <script src="https://maps.googleapis.com/maps/api/js?key={{ env('GOOGLE_MAPS_API_KEY') }}&callback=initMap" async defer></script>

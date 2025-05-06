@@ -15,8 +15,15 @@ class Memory extends Model
         'location_name',
         'latitude',
         'longitude',
-        'photo',
         'rating',
         'user_id'
     ];
+
+    /**
+     * Get all photos attached to this memory.
+     */
+    public function photos()
+    {
+        return $this->hasMany(Photo::class);
+    }
 }

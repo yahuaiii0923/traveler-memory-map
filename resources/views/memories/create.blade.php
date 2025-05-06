@@ -49,12 +49,13 @@
        </div>
 <!-- Grouped Row: Photo, Category, Rating -->
 <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-    <!-- Photo Upload -->
-    <div>
-        <label class="block text-sm font-medium text-white mb-1">Upload Photo</label>
-        <input type="file" name="photo" accept="image/*"
-               class="w-full file:px-4 file:py-2 file:rounded-lg file:border-0 file:bg-blue-600 file:text-white file:cursor-pointer bg-white text-black rounded-lg border border-gray-300">
-    </div>
+   <!-- Photo Upload -->
+   <div>
+       <label class="block text-sm font-medium text-white mb-1">Upload Photos</label>
+       <input type="file" name="photos[]" multiple accept="image/*"
+              class="w-full file:px-4 file:py-2 file:rounded-lg file:border-0 file:bg-blue-600 file:text-white file:cursor-pointer bg-white text-black rounded-lg border border-gray-300">
+   </div>
+
 
     <!-- Rating -->
     <div>
