@@ -230,31 +230,61 @@
                 <div class="grid md:grid-cols-3 gap-8 text-center mb-20">
                     <div class="bg-white p-8 rounded-xl shadow-sm border border-[#dbd3c8]">
                         <div class="text-5xl font-bold text-gray-700 mb-2">{{ $stats['memories'] }}</div>
-                        <div class="text-gray-600 uppercase text-sm tracking-wide">Sandy Memories</div>
+                        <div class="text-gray-600 uppercase text-sm tracking-wide">Memories Created</div>
+                        <p class="text-gray-500 mt-2">Journey moments preserved</p>
                     </div>
                     <div class="bg-white p-8 rounded-xl shadow-sm border border-[#dbd3c8]">
-                        <div class="text-5xl font-bold text-gray-700 mb-2">{{ $stats['countries'] }}</div>
-                        <div class="text-gray-600 uppercase text-sm tracking-wide">Coasts Explored</div>
+                        <div class="text-5xl font-bold text-gray-700 mb-2">
+                            {{ $stats['countries'] ?? 'N/A' }}
+                        </div>
+                        <div class="text-gray-600 uppercase text-sm tracking-wide">Countries Mapped</div>
+                        <p class="text-gray-500 mt-2">Places explored around the world</p>
                     </div>
                     <div class="bg-white p-8 rounded-xl shadow-sm border border-[#dbd3c8]">
                         <div class="text-5xl font-bold text-gray-700 mb-2">{{ $stats['photos'] }}</div>
-                        <div class="text-gray-600 uppercase text-sm tracking-wide">Tides Captured</div>
+                        <div class="text-gray-600 uppercase text-sm tracking-wide">Memorable Photos</div>
+                        <p class="text-gray-500 mt-2">Captured memories shared</p>
                     </div>
                 </div>
             </div>
         </section>
 
-    <!-- CTA Section -->
-    <section class="bg-gradient-to-br from-[#dbd3c8] to-[#c4b8ac]">
-            <div class="container mx-auto px-4 py-20 text-center">
-                <h2 class="text-4xl font-bold text-gray-800 mb-6">Ready to Preserve Your Memories?</h2>
-                <p class="text-xl text-gray-700/90 mb-8">Begin your coastal travel chronicle today</p>
-                <a href="{{ route('register') }}" class="inline-flex items-center px-8 py-4 bg-white text-gray-800 font-semibold rounded-lg hover:bg-[#dbd3c8]/20 transition-all shadow-lg hover:shadow-xl">
-                    Start Your Legacy
-                    <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
-                    </svg>
-                </a>
+        <!-- Dynamic CTA Section -->
+        <section class="relative bg-[#dbd3c8] py-20 overflow-hidden">
+            <!-- Parallax Background -->
+            <div class="absolute inset-0 bg-fixed bg-center bg-cover" style="background-image: url('{{ asset('images/nature1.jpg') }}'); opacity: 0.6;"></div>
+            <div class="relative container mx-auto px-4 text-center text-white">
+                <!-- Social Proof -->
+                <div class="mb-6">
+                    <span class="inline-block bg-gray-800 px-3 py-1 text-sm rounded-full">
+                        Join {{ $stats['users'] ?? 'many' }} explorers sharing their journeys!
+                    </span>
+                </div>
+
+                <!-- Main CTA Heading -->
+                <div class="max-w-3xl mx-auto mb-6">
+                    <h2 class="text-5xl font-extrabold leading-tight animate-fadeInUp">
+                        Your Journey Awaits
+                    </h2>
+                    <p class="text-xl mt-2 font-medium opacity-90 animate-fadeInUp delay-100">
+                        Map your adventures, share your stories, and relive every moment.
+                    </p>
+                </div>
+
+                <!-- CTA Buttons -->
+                <div class="flex flex-col md:flex-row justify-center items-center space-y-4 md:space-y-0 md:space-x-4 animate-fadeInUp delay-200">
+                    <a href="{{ route('register') }}" class="px-8 py-4 bg-[#374151] text-white font-semibold rounded-lg shadow-lg hover:bg-[#505a63] transition-all">
+                        Get Started
+                        <svg class="w-5 h-5 ml-2 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
+                        </svg>
+                    </a>
+                </div>
+
+                <!-- Additional Social Proof -->
+                <div class="mt-8 text-lg font-light text-gray-100 opacity-90 animate-fadeInUp delay-300">
+                    <p>"Discover places you've been, and find inspiration for your next adventure with Memory Mapper."</p>
+                </div>
             </div>
         </section>
     @endsection

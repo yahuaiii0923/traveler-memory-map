@@ -10,12 +10,12 @@
     <!-- Navigation Links -->
     <div class="hidden md:flex items-center space-x-6 h-full">
         <x-nav-link href="{{ route('memories.index') }}" :active="request()->routeIs('memories.index')"
-                   class="text-[#ded5cc] hover:text-[#aee2e8] transition-colors">
+                   style="color: #f5f0e9;" onmouseover="this.style.color='#aee2e8'" onmouseout="this.style.color='#f5f0e9'">
             Memories
         </x-nav-link>
         @auth
         <x-nav-link href="{{ route('memories.create') }}" :active="request()->routeIs('memories.create')"
-                   class="text-[#ded5cc] hover:text-[#aee2e8] transition-colors">
+                   style="color: #f5f0e9;" onmouseover="this.style.color='#aee2e8'" onmouseout="this.style.color='#f5f0e9'">
             New Memory
         </x-nav-link>
         @endauth
@@ -27,7 +27,7 @@
         <a href="{{ route('login') }}" class="px-4 py-2 text-[#f5f0e9] hover:text-[#aee2e8] transition-colors">
             Login
         </a>
-        <a href="{{ route('register') }}" class="px-4 py-2 bg-[#dbd3c8] text-[#1f2937] hover:text-[#dbd3c8]rounded-lg hover:bg-[#aee2e8] transition-all rounded-2xl
+        <a href="{{ route('register') }}" class="px-4 py-2 bg-[#dbd3c8] text-[#1f2937] hover:text-[#dbd3c8]rounded-lg hover:bg-[#aee2e8] transition-all rounded-xl
 
 ">
             Register
