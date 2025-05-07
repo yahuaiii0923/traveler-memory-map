@@ -217,10 +217,10 @@
                         </div>
                     @endforeach
                     <div class="text-center mt-10 col-span-full">
-                        <a href="{{ route('testimonials.index') }}" class="text-[#5f5240] hover:underline font-medium mr-4">
+                        <a href="{{ route('testimonials.index') }}" class="text-[#008080] hover:underline font-medium mr-4">
                             → View all testimonials
                         </a>
-                        <a href="{{ route('testimonials.create') }}" class="text-[#5f5240] hover:underline font-medium">
+                        <a href="{{ route('testimonials.create') }}" class="text-[#008080] hover:underline font-medium">
                             → Share your own testimonial
                         </a>
                     </div>
