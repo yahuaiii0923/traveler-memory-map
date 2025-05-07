@@ -9,20 +9,19 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-    public function up()
+    public function up(): void
     {
-        Schema::table('testimonials', function (Blueprint $table) {
-            $table->unique('username');
+        Schema::create('testimonials', function (Blueprint $table) {
+            $table->id();
+            $table->timestamps();
         });
     }
 
     /**
      * Reverse the migrations.
      */
-    public function down()
+    public function down(): void
     {
-        Schema::table('testimonials', function (Blueprint $table) {
-            $table->dropUnique(['username']);
-        });
+        Schema::dropIfExists('testimonials');
     }
 };

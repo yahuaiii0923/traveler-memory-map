@@ -84,17 +84,20 @@
 <div class="w-full max-w-7xl mx-auto px-4">
     <div class="carousel-wrapper">
         <div class="carousel-track">
-            <button class="year-button active" onclick="showAllMarkers()" id="all-years-btn" style="--index: 0; --total: {{ count($years) + 1 }};">
+            <button class="year-button active" onclick="showAllMarkers()" id="all-years-btn" style="--index: 0; --total: {{ is_countable($years) ? count($years) + 1 : 1 }};">
                 All
             </button>
+            @if(is_countable($years) && count($years) > 0)
             @foreach ($years as $index => $year)
             <button class="year-button" onclick="filterMarkersByYear({{ $year }})" style="--index: {{ $index + 1 }}; --total: {{ count($years) + 1 }};">
                 {{ $year }}
             </button>
             @endforeach
+            @endif
         </div>
     </div>
 </div>
+
 
 <script>
     let map;
@@ -137,9 +140,10 @@
 
             const photoHtml = memory.photos && memory.photos.length
                 ? memory.photos.map(path =>
-                    `<img src="/storage/${path}" class="w-full h-40 object-cover rounded mb-3 border" alt="Memory photo">`
+                    `<img src="{{ asset('images/') }}/${path}" class="w-full h-40 object-cover rounded mb-3 border" alt="Memory photo">`
                 ).join('')
                 : '';
+
             const infoWindow = new google.maps.InfoWindow({
                 content: `
                 <div class='bg-white rounded-xl shadow-lg p-6 max-w-md w-full'>
