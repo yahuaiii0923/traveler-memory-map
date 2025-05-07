@@ -135,12 +135,17 @@
                 title: memory.title
             });
 
+            const photoHtml = memory.photos && memory.photos.length
+                ? memory.photos.map(path =>
+                    `<img src="/storage/${path}" class="w-full h-40 object-cover rounded mb-3 border" alt="Memory photo">`
+                ).join('')
+                : '';
             const infoWindow = new google.maps.InfoWindow({
                 content: `
                 <div class='bg-white rounded-xl shadow-lg p-6 max-w-md w-full'>
                     <h3 class='text-xl font-bold text-gray-900 mb-3'>${memory.title}</h3>
                     <p class='text-sm text-gray-700 mb-3'>${memory.description}</p>
-                    ${memory.photo ? `<img src="/storage/${memory.photo}" class="w-full h-52 object-cover rounded-md mb-3 border" alt="Memory photo">` : ''}
+                    ${photoHtml}
                     ${memory.location_name ? `<p class='text-sm text-gray-500 mb-1'>📍 <em>${memory.location_name}</em></p>` : ''}
                     ${memory.rating ? `<p class='text-sm text-yellow-600 mb-2'>⭐ <strong>Rating:</strong> ${memory.rating}/5</p>` : ''}
                     <p class='text-xs text-gray-400'>🗓️ Added on ${new Date(memory.created_at).getFullYear()}</p>

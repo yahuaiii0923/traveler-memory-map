@@ -10,13 +10,13 @@ class MemoryController extends Controller
 {
     public function index()
     {
-        $allMemories = Memory::with('photos')->get(); // eager load photos
+        $allMemories = Memory::with('photos')->get();
 
         $memories = $allMemories->map(function ($memory) {
             return [
                 'title' => $memory->title,
                 'description' => $memory->description,
-                'photo' => $memory->photos->first()?->file_path, // first image only
+                'photos' => $memory->photos->pluck('file_path'),
                 'location_name' => $memory->location_name,
                 'rating' => $memory->rating,
                 'latitude' => $memory->latitude,
@@ -24,10 +24,6 @@ class MemoryController extends Controller
                 'created_at' => $memory->created_at->toDateTimeString(),
             ];
         });
-
-        $groupedMemories = $allMemories->groupBy(function ($memory) {
-            return $memory->created_at->year;
-        })->sortKeysDesc();
 
         $years = $allMemories->pluck('created_at')
             ->map(fn($date) => \Carbon\Carbon::parse($date)->year)
@@ -37,7 +33,6 @@ class MemoryController extends Controller
 
         return view('memories.index', [
             'memories' => $memories,
-            'groupedMemories' => $groupedMemories,
             'years' => $years
         ]);
     }
@@ -59,20 +54,20 @@ class MemoryController extends Controller
             'rating' => 'nullable|integer|min:1|max:5',
         ]);
 
-        $validated['user_id'] = auth()->id();
+        $memory = Memory::create([
+            'title' => $validated['title'],
+            'description' => $validated['description'],
+            'location_name' => $validated['location_name'],
+            'latitude' => $validated['latitude'],
+            'longitude' => $validated['longitude'],
+            'rating' => $validated['rating'],
+            'user_id' => auth()->id(),
+        ]);
 
-        // Create the memory once
-        $memory = Memory::create($validated);
-
-        // Save all uploaded photos (if any)
         if ($request->hasFile('photos')) {
             foreach ($request->file('photos') as $photo) {
                 $path = $photo->store('memories', 'public');
-
-                Photo::create([
-                    'memory_id' => $memory->id,
-                    'file_path' => $path
-                ]);
+                $memory->photos()->create(['file_path' => $path]);
             }
         }
 

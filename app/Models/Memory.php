@@ -10,18 +10,10 @@ class Memory extends Model
     use HasFactory;
 
     protected $fillable = [
-        'title',
-        'description',
-        'location_name',
-        'latitude',
-        'longitude',
-        'rating',
-        'user_id'
+        'title', 'description', 'location_name',
+        'latitude', 'longitude', 'rating', 'user_id'
     ];
 
-    /**
-     * Get all photos attached to this memory.
-     */
     public function photos()
     {
         return $this->hasMany(Photo::class);
