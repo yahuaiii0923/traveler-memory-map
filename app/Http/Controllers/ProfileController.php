@@ -11,30 +11,42 @@ use Illuminate\View\View;
 
 class ProfileController extends Controller
 {
+    public function index()
+    {
+        $user = Auth::user()->load(['memories', 'testimonials']);
+        return view('profile.index', compact('user'));
+    }
     /**
      * Display the user's profile form.
      */
-    public function edit(Request $request): View
+    public function edit()
     {
-        return view('profile.edit', [
-            'user' => $request->user(),
-        ]);
-    }
+        if (Auth::check()) {
+            $user = Auth::user();
+            \Log::info('User data in edit method: ', ['user' => $user]);
+            return view('profile.edit', compact('user'));
+        }
 
+        return redirect()->route('login')->with('error', 'You must be logged in to edit your profile.');
+    }
     /**
      * Update the user's profile information.
      */
     public function update(ProfileUpdateRequest $request): RedirectResponse
     {
-        $request->user()->fill($request->validated());
+        $user = Auth::user();
+        $user->name = $request->name;
+        $user->username = $request->username;
+        $user->email = $request->email;
 
-        if ($request->user()->isDirty('email')) {
-            $request->user()->email_verified_at = null;
+        if ($request->hasFile('profile_photo')) {
+            $path = $request->file('profile_photo')->store('profile_photos', 'public');
+            $user->profile_photo = $path;
         }
 
-        $request->user()->save();
+        $user->save();
 
-        return Redirect::route('profile.edit')->with('status', 'profile-updated');
+        return redirect()->route('profile.index')->with('status', 'Profile updated successfully.');
     }
 
     /**

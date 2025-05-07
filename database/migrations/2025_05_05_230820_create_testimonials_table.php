@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('metric');
             $table->string('memory_slug')->nullable();
             $table->boolean('is_public')->default(true);
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->timestamps();
         });
     }
