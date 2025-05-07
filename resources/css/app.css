@@ -2,12 +2,13 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Add these fixes */
+/* Animation for fade-in effect */
 .animate-fadeInUp {
     @apply opacity-0 translate-y-8 transition-all duration-500 ease-out;
     animation-fill-mode: forwards !important;
 }
 
+/* Ensure hero content stays visible */
 .hero {
     z-index: 10;
 }
@@ -16,60 +17,48 @@
     z-index: 30 !important;
 }
 
-/* Ensure hero content stays visible */
-.relative.z-10 {
-    z-index: 20 !important;
-}
-
-/* Add to your app.css */
-@layer components {
-    /* Fix header overlap */
-    .pt-header {
-        padding-top: 4rem; /* Match your header height */
-    }
-
-    /* Ensure header stays contained */
-    header {
-        @apply z-50 shadow-sm; /* Ensure header has higher z-index than content */
-    }
-
-    /* Adjust hero positioning */
-    .hero-content {
-        @apply pt-8 md:pt-12;
-    }
-}
-
-/* Remove default browser spacing */
+/* Make sure the header covers the top area without gaps */
 @layer base {
-    html {
-        @apply scroll-pt-16; /* For anchor links */
+    html, body {
+        @apply m-0 p-0; /* Remove any margin and padding */
     }
 
-    body {
-        @apply m-0 p-0;
+    header {
+        @apply bg-[#374151] fixed w-full top-0 z-50 h-16 md:h-20 shadow-sm;
+    }
+
+    /* Main content should account for header height */
+    main {
+        @apply pt-16 md:pt-20;
     }
 }
 
-/* Fix header/content gap */
-main {
-    @apply pt-16; /* h-16 = 4rem = 64px */
-}
-
-/* Ensure header background coverage */
+/* Navigation bar styling */
 nav {
-    @apply bg-white !important;
+    @apply bg-[#374151] text-[#f5f0e9];
     box-shadow: 0 1px 3px rgba(0,0,0,0.1);
 }
 
-/* Fix dropdown positioning */
+/* Dropdown visibility fix */
 [x-cloak] {
     display: none !important;
 }
 
+/* Map styling */
 #travel-map {
-    height: 100%;
-    width: 100%;
-    min-height: 400px;
-    background-color: #dbd3c820;
+    @apply h-full w-full min-h-[400px] bg-[#dbd3c8]/20;
 }
 
+/* Footer fix */
+footer {
+    @apply bg-[#374151] text-[#f5f0e9] py-8;
+}
+
+/* Fix for the hero section */
+.hero-content {
+    @apply pt-8 md:pt-12;
+}
+
+.relative.z-10 {
+    z-index: 20 !important;
+}

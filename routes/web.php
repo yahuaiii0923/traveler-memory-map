@@ -34,3 +34,10 @@ Route::post('/testimonials', [TestimonialController::class, 'store'])->name('tes
 Route::get('/test-auth', function () {
     return Auth::check() ? 'User is logged in: '.Auth::user()->name : 'Not logged in';
 });
+
+Route::view('/about', 'about')->name('about');
+Route::view('/contact', 'contact')->name('contact');
+Route::post('/contact', function (Request $request) {
+    return redirect()->back()->with('message', 'Your message has been sent!');
+})->name('contact.submit');
+Route::view('/privacy', 'privacy')->name('privacy');
