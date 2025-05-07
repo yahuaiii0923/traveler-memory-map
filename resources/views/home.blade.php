@@ -13,14 +13,14 @@
             <!-- Content Container -->
             <div class="container mx-auto px-4 relative z-10">
                 <div class="max-w-4xl mx-auto text-center">
-                    <h1 class="text-5xl md:text-6xl font-bold text-gray-800 mb-6 animate-fadeInUp">
+                    <h1 class="text-5xl md:text-6xl font-bold text-[#374151] mb-6 animate-fadeInUp">
                         <span class="block">Welcome to</span>
                         <span class="bg-gradient-to-r from-white via-[#6b7280] to-[#1e2a38] bg-clip-text text-transparent">
                             Memory Mapper
                         </span>
                     </h1>
 
-                    <p class="text-xl md:text-2xl text-gray-700 mb-8 animate-fadeInUp delay-100">
+                    <p class="text-xl md:text-2xl text-[#374151] mb-8 animate-fadeInUp delay-100">
                         Your personal compass for preserving unforgettable journeys.
                     </p>
 
@@ -41,52 +41,52 @@
     <section class="py-20 bg-[#dbd3c8]/30">
             <div class="container mx-auto px-4">
                 <div class="text-center mb-16">
-                    <h2 class="text-4xl font-bold text-gray-800 mb-4">Why Choose Memory Mapper?</h2>
-                    <p class="text-xl text-[#5f5240]">Capture, map, and relive your most cherished travel experiences.</p>
+                    <h2 class="text-4xl font-bold text-[#374151] mb-4">Why Choose Memory Mapper?</h2>
+                    <p class="text-xl text-[#374151]">Capture, map, and relive your most cherished travel experiences.</p>
                 </div>
                 <div class="grid md:grid-cols-3 gap-8">
                     <div class="bg-white p-8 rounded-2xl shadow-sm border border-[#dbd3c8] hover:shadow-lg transition-all">
                         <div class="w-16 h-16 bg-[#dbd3c8] rounded-xl flex items-center justify-center mb-6 mx-auto">
-                            <svg class="w-8 h-8 text-[#5f5240]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <svg class="w-8 h-8 text-[#374151]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                       d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0zM15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
                             </svg>
                         </div>
-                        <h3 class="text-2xl font-semibold text-[#5f5240] mb-3">Interactive World Mapping</h3>
-                        <p class="text-[#7a6b59]">Drop pins on your journey and watch your adventures come to life with immersive map views.</p>
+                        <h3 class="text-2xl font-semibold text-[#374151] mb-3">Interactive World Mapping</h3>
+                        <p class="text-[#374151]">Drop pins on your journey and watch your adventures come to life with immersive map views.</p>
                     </div>
 
                     <div class="bg-white p-8 rounded-2xl shadow-sm border border-[#dbd3c8] hover:shadow-lg transition-all">
                         <div class="w-16 h-16 bg-[#dbd3c8] rounded-xl flex items-center justify-center mb-6 mx-auto">
-                            <svg class="w-8 h-8 text-[#5f5240]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <svg class="w-8 h-8 text-[#374151]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                       d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
                             </svg>
                         </div>
-                        <h3 class="text-2xl font-semibold text-[#5f5240] mb-3">Chronological Journey</h3>
-                        <p class="text-[#7a6b59]">Effortlessly arrange your travels in a time-ordered flow that feels like storytelling.</p>
+                        <h3 class="text-2xl font-semibold text-[#374151] mb-3">Chronological Journey</h3>
+                        <p class="text-[#374151]">Effortlessly arrange your travels in a time-ordered flow that feels like storytelling.</p>
                     </div>
 
                     <div class="bg-white p-8 rounded-2xl shadow-sm border border-[#dbd3c8] hover:shadow-lg transition-all">
                         <div class="w-16 h-16 bg-[#dbd3c8] rounded-xl flex items-center justify-center mb-6 mx-auto">
-                            <svg class="w-8 h-8 text-[#5f5240]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <svg class="w-8 h-8 text-[#374151]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                       d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
                             </svg>
                         </div>
-                        <h3 class="text-2xl font-semibold text-[#5f5240] mb-3">Visual Memory Showcase</h3>
-                        <p class="text-[#7a6b59]">Create an elegant travel gallery—highlighting your favorite sights, moments, and stories.</p>
+                        <h3 class="text-2xl font-semibold text-[#374151] mb-3">Visual Memory Showcase</h3>
+                        <p class="text-[#374151]">Create an elegant travel gallery—highlighting your favorite sights, moments, and stories.</p>
                     </div>
                 </div>
 
                 <div class="grid md:grid-cols-2 gap-8 mt-16">
                     <div class="bg-white p-8 rounded-2xl shadow-sm border border-[#dbd3c8] hover:shadow-lg transition-all">
-                        <h3 class="text-2xl font-semibold text-[#5f5240] mb-3">Personalized Location Details</h3>
-                        <p class="text-[#7a6b59]">Attach custom notes, tags, and dates to every location—building a deeply personal travel archive.</p>
+                        <h3 class="text-2xl font-semibold text-[#374151] mb-3">Personalized Location Details</h3>
+                        <p class="text-[#374151]">Attach custom notes, tags, and dates to every location—building a deeply personal travel archive.</p>
                     </div>
                     <div class="bg-white p-8 rounded-2xl shadow-sm border border-[#dbd3c8] hover:shadow-lg transition-all">
-                        <h3 class="text-2xl font-semibold text-[#5f5240] mb-3">Mobile-Friendly Exploration</h3>
-                        <p class="text-[#7a6b59]">Access your Memory Map on the go, anytime, anywhere—perfect for travel journaling on the move.</p>
+                        <h3 class="text-2xl font-semibold text-[#374151] mb-3">Mobile-Friendly Exploration</h3>
+                        <p class="text-[#374151]">Access your Memory Map on the go, anytime, anywhere—perfect for travel journaling on the move.</p>
                     </div>
                 </div>
             </div>
@@ -96,8 +96,8 @@
        <section class="py-20 bg-[#ede6dd]">
            <div class="container mx-auto px-4">
                <div class="text-center mb-16">
-                   <h2 class="text-4xl font-bold text-gray-800 mb-4">Journey Timeline</h2>
-                   <p class="text-xl text-gray-700/90">Navigate through your coastal memories</p>
+                   <h2 class="text-4xl font-bold text-[#374151] mb-4">Journey Timeline</h2>
+                   <p class="text-xl text-[#374151]/90">Navigate through your coastal memories</p>
                </div>
 
                <div class="grid lg:grid-cols-2 gap-8 lg:gap-16">
@@ -116,9 +116,9 @@
                                    <div class="text-sm font-semibold text-[#c4b8ac]">May 2023</div>
                                    <div class="w-4 h-px bg-[#dbd3c8] flex-1"></div>
                                </div>
-                               <h3 class="text-2xl font-semibold text-gray-800 mt-2">Santorini Sunsets</h3>
-                               <p class="text-gray-600/90 mt-2">Golden hour over Aegean waters</p>
-                               <div class="flex items-center mt-4 text-[#8a7866]">
+                               <h3 class="text-2xl font-semibold text-[#374151] mt-2">Santorini Sunsets</h3>
+                               <p class="text-[#374151]/90 mt-2">Golden hour over Aegean waters</p>
+                               <div class="flex items-center mt-4 text-[#374151]">
                                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0zM15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
                                    </svg>
@@ -138,9 +138,9 @@
                                    <div class="text-sm font-semibold text-[#c4b8ac]">August 2023</div>
                                    <div class="w-4 h-px bg-[#dbd3c8] flex-1"></div>
                                </div>
-                               <h3 class="text-2xl font-semibold text-gray-800 mt-2">Maldives Serenity</h3>
-                               <p class="text-gray-600/90 mt-2">Turquoise meets powder sands</p>
-                               <div class="flex items-center mt-4 text-[#8a7866]">
+                               <h3 class="text-2xl font-semibold text-[#374151] mt-2">Maldives Serenity</h3>
+                               <p class="text-[#374151]/90 mt-2">Turquoise meets powder sands</p>
+                               <div class="flex items-center mt-4 text-[#374151]">
                                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0zM15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
                                    </svg>
@@ -160,9 +160,9 @@
                                    <div class="text-sm font-semibold text-[#c4b8ac]">November 2023</div>
                                    <div class="w-4 h-px bg-[#dbd3c8] flex-1"></div>
                                </div>
-                               <h3 class="text-2xl font-semibold text-gray-800 mt-2">Bali Retreat</h3>
-                               <p class="text-gray-600/90 mt-2">Emerald rice terraces and ocean bliss</p>
-                               <div class="flex items-center mt-4 text-[#8a7866]">
+                               <h3 class="text-2xl font-semibold text-[#374151] mt-2">Bali Retreat</h3>
+                               <p class="text-[#374151]/90 mt-2">Emerald rice terraces and ocean bliss</p>
+                               <div class="flex items-center mt-4 text-[#374151]">
                                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0zM15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
                                    </svg>
@@ -184,8 +184,8 @@
     <section class="py-20 bg-gradient-to-b from-[#f8f6f2] to-[#ede8e1]">
             <div class="container mx-auto px-4">
                 <div class="text-center mb-16">
-                    <h2 class="text-4xl font-bold text-gray-800 mb-4">What Explorers Say & Memory Stats</h2>
-                    <p class="text-xl text-gray-700/90">Reflections and numbers from your fellow Memory Mappers</p>
+                    <h2 class="text-4xl font-bold text-[#374151] mb-4">What Explorers Say & Memory Stats</h2>
+                    <p class="text-xl text-[#374151]/90">Reflections and numbers from your fellow Memory Mappers</p>
                 </div>
 
                 <!-- Testimonials -->
@@ -197,12 +197,12 @@
                                      class="w-12 h-12 rounded-full mr-4 border-2 border-[#dbd3c8] hover:border-[#c4b8ac] transition-colors"
                                      alt="{{ $testimonial->name }}">
                                 <div>
-                                    <h4 class="font-bold text-gray-800">{{ $testimonial->name }}</h4>
-                                    <p class="text-sm text-gray-600">{{ $testimonial->role }}</p>
+                                    <h4 class="font-bold text-[#374151]">{{ $testimonial->name }}</h4>
+                                    <p class="text-sm text-[#374151]">{{ $testimonial->role }}</p>
                                 </div>
                             </div>
-                            <p class="text-gray-600/90 mb-4">{{ $testimonial->text }}</p>
-                            <div class="flex items-center text-gray-600 text-sm">
+                            <p class="text-[#374151]/90 mb-4">{{ $testimonial->text }}</p>
+                            <div class="flex items-center text-[#374151] text-sm">
                                 <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
                                 </svg>
@@ -210,17 +210,17 @@
                             </div>
                             @if($testimonial->memory_slug && $testimonial->is_public)
                                 <a href="{{ route('memories.show', $testimonial->memory_slug) }}"
-                                   class="mt-3 inline-block text-sm text-[#5f5240] hover:underline">
+                                   class="mt-3 inline-block text-sm text-[#374151] hover:underline">
                                     → View This Memory
                                 </a>
                             @endif
                         </div>
                     @endforeach
                     <div class="text-center mt-10 col-span-full">
-                        <a href="{{ route('testimonials.index') }}" class="text-[#008080] hover:underline font-medium mr-4">
+                        <a href="{{ route('testimonials.index') }}" class="text-[#11bdbd] hover:underline font-medium mr-4">
                             → View all testimonials
                         </a>
-                        <a href="{{ route('testimonials.create') }}" class="text-[#008080] hover:underline font-medium">
+                        <a href="{{ route('testimonials.create') }}" class="text-[#11bdbd] hover:underline font-medium">
                             → Share your own testimonial
                         </a>
                     </div>
@@ -229,21 +229,21 @@
                 <!-- Stats -->
                 <div class="grid md:grid-cols-3 gap-8 text-center mb-20">
                     <div class="bg-white p-8 rounded-xl shadow-sm border border-[#dbd3c8]">
-                        <div class="text-5xl font-bold text-gray-700 mb-2">{{ $stats['memories'] }}</div>
-                        <div class="text-gray-600 uppercase text-sm tracking-wide">Memories Created</div>
-                        <p class="text-gray-500 mt-2">Journey moments preserved</p>
+                        <div class="text-5xl font-bold text-[#374151] mb-2">{{ $stats['memories'] }}</div>
+                        <div class="text-[#374151] uppercase text-sm tracking-wide">Memories Created</div>
+                        <p class="text-[#374151] mt-2">Journey moments preserved</p>
                     </div>
                     <div class="bg-white p-8 rounded-xl shadow-sm border border-[#dbd3c8]">
-                        <div class="text-5xl font-bold text-gray-700 mb-2">
+                        <div class="text-5xl font-bold text-[#374151] mb-2">
                             {{ $stats['countries'] ?? 'N/A' }}
                         </div>
-                        <div class="text-gray-600 uppercase text-sm tracking-wide">Countries Mapped</div>
-                        <p class="text-gray-500 mt-2">Places explored around the world</p>
+                        <div class="text-[#374151] uppercase text-sm tracking-wide">Countries Mapped</div>
+                        <p class="text-[#374151] mt-2">Places explored around the world</p>
                     </div>
                     <div class="bg-white p-8 rounded-xl shadow-sm border border-[#dbd3c8]">
-                        <div class="text-5xl font-bold text-gray-700 mb-2">{{ $stats['photos'] }}</div>
-                        <div class="text-gray-600 uppercase text-sm tracking-wide">Memorable Photos</div>
-                        <p class="text-gray-500 mt-2">Captured memories shared</p>
+                        <div class="text-5xl font-bold text-[#374151] mb-2">{{ $stats['photos'] }}</div>
+                        <div class="text-[#374151] uppercase text-sm tracking-wide">Memorable Photos</div>
+                        <p class="text-[#374151] mt-2">Captured memories shared</p>
                     </div>
                 </div>
             </div>
@@ -341,4 +341,4 @@
     }
 </script>
 
-<script async defer src="https://maps.googleapis.com/maps/api/js?key={{ config('services.google.maps_key') }}&callback=initMap"></script>
+<script async defer src="https://maps.googleapis.com/maps/api/js?key={{ env('GOOGLE_MAPS_API_KEY') }}&libraries=marker&callback=initMap"></script>

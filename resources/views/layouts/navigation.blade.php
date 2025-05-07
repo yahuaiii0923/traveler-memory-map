@@ -28,7 +28,6 @@
             Login
         </a>
         <a href="{{ route('register') }}" class="px-4 py-2 bg-[#dbd3c8] text-[#1f2937] hover:text-[#dbd3c8]rounded-lg hover:bg-[#aee2e8] transition-all rounded-xl
-
 ">
             Register
         </a>
@@ -48,10 +47,10 @@
                     <div class="mr-2 text-[#f5f0e9] font-semibold hidden md:inline-block">
                         {{ Auth::user()->username ?? Auth::user()->name }}
                     </div>
-                    <div class="w-9 h-9 rounded-full overflow-hidden border-2 border-[#aee2e8]">
+                    <div class="w-9 h-9 rounded-full overflow-hidden border-2 border-[#f5f0e9]">
                         <img src="{{ Auth::user()->profile_photo
                             ? asset('storage/' . Auth::user()->profile_photo)
-                            : 'https://img.icons8.com/?size=100&id=ABBSjQJK83zf&format=png&color=008080' }}"
+                            : 'https://img.icons8.com/?size=100&id=ABBSjQJK83zf&format=png&color=f5f0e9' }}"
                             alt="User Photo" class="object-cover w-full h-full">
                     </div>
                 </button>

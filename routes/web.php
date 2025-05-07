@@ -6,6 +6,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\MemoryController;
 use App\Http\Controllers\MapController;
 use App\Http\Controllers\TestimonialController;
+use App\Http\Controllers\DashboardController;
 
 // Main route
 Route::get('/', [HomeController::class, 'index'])->name('home');
@@ -18,7 +19,7 @@ Route::middleware(['auth'])->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+Route::get('/dashboard', [DashboardController::class, 'index'])->middleware('auth')->name('dashboard');
 Route::get('/map', [MapController::class, 'index'])->name('map');
 
 // Authentication routes (now provided by laravel/ui)
