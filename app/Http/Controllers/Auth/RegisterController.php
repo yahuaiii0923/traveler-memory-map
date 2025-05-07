@@ -50,11 +50,24 @@ class RegisterController extends Controller
     protected function validator(array $data)
     {
         return Validator::make($data, [
-            'name' => ['required', 'string', 'max:255'],
-            'username' => ['required', 'string', 'max:255', 'unique:users'],
+            'name' => ['required', 'string', 'min:2', 'max:50'],
+            'username' => [
+                'required', 'string', 'min:3', 'max:30', 'unique:users',
+                'regex:/^[a-zA-Z0-9_]+$/'
+            ],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-            'password' => ['required', 'string', 'min:8', 'confirmed'],
+            'password' => [
+                'required',
+                'string',
+                'min:8',
+                'confirmed',
+                'regex:/^(?=.*[a-zA-Z])(?=.*\d)(?=.*[\W_]).+$/'
+            ],
             'profile_photo' => ['nullable', 'image', 'max:2048'],
+        ], [
+            'username.regex' => 'Username may only contain letters, numbers, and underscores.',
+            'password.regex' => 'Password must contain at least one letter, one number, and one special character.',
+            'profile_photo.image' => 'The profile photo must be a valid image file.',
         ]);
     }
 
@@ -67,13 +80,14 @@ class RegisterController extends Controller
     protected function create(array $data)
     {
         $profilePhotoPath = null;
-        if (request()->hasFile('profile_photo') && request()->file('profile_photo')->isValid()) {
+
+        if (request()->hasFile('profile_photo')) {
             $profilePhotoPath = request()->file('profile_photo')->store('profile_photos', 'public');
         }
 
         return User::create([
             'name' => $data['name'],
-            'username' => $data['username'], // if you're using username
+            'username' => $data['username'],
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
             'profile_photo' => $profilePhotoPath ?? 'default.png',

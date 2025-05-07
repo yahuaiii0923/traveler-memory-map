@@ -42,7 +42,31 @@
 
         <!-- User Dropdown -->
         <x-dropdown align="right" width="48">
-            <!-- ... existing dropdown structure ... -->
+            <x-slot name="trigger">
+                <button class="flex items-center text-sm focus:outline-none">
+                    <div class="mr-2 text-gray-700 font-semibold hidden md:inline-block">
+                        {{ Auth::user()->username ?? Auth::user()->name }}
+                    </div>
+                    <div class="w-9 h-9 rounded-full overflow-hidden border-2 border-[#c4b8ac]">
+                        <img src="{{ Auth::user()->profile_photo
+                            ? asset('storage/' . Auth::user()->profile_photo)
+                            : 'https://img.icons8.com/?size=100&id=ABBSjQJK83zf&format=png&color=c4b8ac' }}"
+                            alt="User Photo" class="object-cover w-full h-full">
+                    </div>
+                </button>
+            </x-slot>
+
+            <x-dropdown-link href="{{ route('profile.edit') }}">
+                Profile
+            </x-dropdown-link>
+
+            <form method="POST" action="{{ route('logout') }}">
+                @csrf
+                <x-dropdown-link href="{{ route('logout') }}"
+                                 onclick="event.preventDefault(); this.closest('form').submit();">
+                    Log Out
+                </x-dropdown-link>
+            </form>
         </x-dropdown>
         @endguest
     </div>
