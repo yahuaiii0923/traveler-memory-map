@@ -47,16 +47,25 @@
       <input type="hidden" name="longitude" id="longitude" value="{{ old('longitude') }}">
 
        </div>
-<!-- Grouped Row: Photo, Category, Rating -->
-<div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-    <!-- Photo Upload -->
-    <div>
-        <label class="block text-sm font-medium text-white mb-1">Upload Photo</label>
-        <input type="file" name="photo" accept="image/*"
-               class="w-full file:px-4 file:py-2 file:rounded-lg file:border-0 file:bg-blue-600 file:text-white file:cursor-pointer bg-white text-black rounded-lg border border-gray-300">
-    </div>
+       <!-- Photo Upload -->
+       <div>
+           <label class="block text-sm font-medium text-white mb-1">Upload Photos</label>
+           <input
+               type="file"
+               name="photos[]"
+               id="photos"
+               multiple
+               accept="image/*"
+               class="w-full file:px-4 file:py-2 file:rounded-lg file:border-0 file:bg-blue-600 file:text-white file:cursor-pointer bg-white text-black rounded-lg border border-gray-300"
+           >
 
-    <!-- Rating -->
+           <!-- Preview container -->
+           <div id="photo-preview" class="mt-4 grid grid-cols-2 md:grid-cols-4 gap-4"></div>
+       </div>
+
+
+
+       <!-- Rating -->
     <div>
         <label for="rating" class="block text-sm font-medium text-white mb-1">Rating (1–5)</label>
         <select name="rating" id="rating"
@@ -121,6 +130,27 @@
     });
 
 </script>
+<script>
+    document.getElementById('photos').addEventListener('change', function (e) {
+        const previewContainer = document.getElementById('photo-preview');
+        previewContainer.innerHTML = ''; // clear previous previews
 
-  </div>
+        Array.from(e.target.files).forEach(file => {
+            const reader = new FileReader();
+
+            reader.onload = function (event) {
+                const img = document.createElement('img');
+                img.src = event.target.result;
+                img.className = 'w-full h-32 object-cover rounded border';
+                previewContainer.appendChild(img);
+            };
+
+            reader.readAsDataURL(file);
+        });
+    });
+</script>
+
+
+
+</div>
 @endsection
