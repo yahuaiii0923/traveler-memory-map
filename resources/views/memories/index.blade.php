@@ -3,16 +3,16 @@
 @section('content')
 <style>
     .custom-marker {
-        width: 60px;
-        height: 60px;
+        width: 30px;
+        height: 30px;
         border-radius: 50%;
         overflow: hidden;
         display: flex;
         justify-content: center;
         align-items: center;
         background-color: white;
-        border: 3px solid #ffffff;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+        border: 1.5px solid #ffffff;
+        box-shadow: 0 3px 6px rgba(0, 0, 0, 0.3);
         position: absolute;
         transform: translate(-50%, -50%);
     }
@@ -34,32 +34,36 @@
         box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
     }
 
-    .floating-plus-button {
+    .year-filter-container {
         position: fixed;
-        bottom: 30px;
-        right: 30px;
-        background-color: #3b82f6;
-        border-radius: 50%;
-        width: 60px;
-        height: 60px;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        background-color: rgba(55, 65, 81, 0.9); /* Gray with slight transparency */
         display: flex;
         justify-content: center;
-        align-items: center;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-        transition: transform 0.3s ease, background-color 0.3s ease;
+        padding: 10px 0;
         z-index: 1000;
     }
 
-    .floating-plus-button:hover {
-        transform: scale(1.1);
-        background-color: #2563eb;
+    .year-filters {
+        display: flex;
+        gap: 8px;
     }
 
-    .plus-icon {
-        width: 30px;
-        height: 30px;
-        stroke: white;
-        stroke-width: 2;
+    .year-filters button {
+        background-color: #2563eb;
+        color: white;
+        padding: 8px 16px;
+        border-radius: 8px;
+        border: none;
+        cursor: pointer;
+        transition: transform 0.2s, background-color 0.2s;
+    }
+
+    .year-filters button:hover {
+        transform: scale(1.05);
+        background-color: #3b82f6;
     }
 </style>
 
@@ -73,43 +77,40 @@
 <div class="w-full max-w-7xl mx-auto px-4 py-6">
     <h1 class="text-2xl font-bold text-white mb-4">Your Travel Memories</h1>
     <div id="map"></div>
-</div>
+
+    <!-- Year Filter Container at the Bottom of the Map -->
+    <div class="year-filter-container">
+        <div class="year-filters">
+            <button onclick="filterMarkers('all')">All</button>
+            @foreach($years as $year)
+            <button onclick="filterMarkers({{ $year }})">{{ $year }}</button>
+            @endforeach
+        </div>
+    </div>
 
 <script>
     let map;
     let allMarkers = [];
 
-
-
     async function getImageUrl(memory) {
-        let imageUrl = "/images/default.png";
+        const defaultUrl = "/images/default.png";
         const extensions = ["jpg", "png", "jpeg", "gif", "webp"];
 
         if (memory.photos && memory.photos.length) {
-            // Check if the filename already has an extension
-            const photoName = memory.photos[0];
-            const fileExtension = photoName.split('.').pop().toLowerCase();
+            let photoName = memory.photos[0];
 
-            if (extensions.includes(fileExtension)) {
-                // If the extension is already present, use it directly
-                const imagePath = `/images/${photoName}`;
+            // Clean up the file name from extra prefixes and extensions
+            photoName = photoName.replace(/^images\//, '').replace(/\.[^/.]+$/, "");
+
+            for (const ext of extensions) {
+                const imagePath = `/images/${photoName}.${ext}`;
                 const isValid = await validateImageUrl(imagePath);
                 if (isValid) {
                     return imagePath;
                 }
-            } else {
-                // If not, try adding each extension
-                for (const ext of extensions) {
-                    const imagePath = `/images/${photoName}.${ext}`;
-                    const isValid = await validateImageUrl(imagePath);
-                    if (isValid) {
-                        return imagePath;
-                    }
-                }
             }
         }
-
-        return imageUrl;
+        return defaultUrl;
     }
 
     function validateImageUrl(url) {
@@ -120,7 +121,6 @@
             img.src = url;
         });
     }
-
 
     async function createMarker(memory, position) {
         const imageUrl = await getImageUrl(memory);
@@ -133,16 +133,26 @@
         markerImage.src = imageUrl;
         markerElement.appendChild(markerImage);
 
-        new google.maps.marker.AdvancedMarkerElement({
+        const marker = new google.maps.marker.AdvancedMarkerElement({
             position: position,
             map: map,
             content: markerElement
+        });
+
+        marker.memoryYear = new Date(memory.created_at).getFullYear();
+        allMarkers.push(marker);
+    }
+
+    function filterMarkers(year) {
+        allMarkers.forEach(marker => {
+            const markerYear = marker.memoryYear;
+            marker.map = (year === 'all' || markerYear === parseInt(year)) ? map : null;
         });
     }
 
     function initMap() {
         map = new google.maps.Map(document.getElementById("map"), {
-            zoom: 4,
+            zoom: 3,
             center: { lat: 20, lng: 0 },
             mapId: "{{ env('GOOGLE_MAPS_MAP_ID') }}",
         });
@@ -160,19 +170,10 @@
             map.fitBounds(bounds);
         }
     }
-
-    window.onload = function () {
-        initMap();
-    };
 </script>
 
-<script
-    src="https://maps.googleapis.com/maps/api/js?key={{ env('GOOGLE_MAPS_API_KEY') }}&libraries=marker&callback=initMap"
-    async
-    defer>
+<script async defer
+        src="https://maps.googleapis.com/maps/api/js?key={{ env('GOOGLE_MAPS_API_KEY') }}&libraries=marker&callback=initMap">
 </script>
-
-
-
 
 @endsection
