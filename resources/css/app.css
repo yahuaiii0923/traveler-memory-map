@@ -72,4 +72,26 @@ nav {
     min-height: 400px;
     background-color: #dbd3c820;
 }
+.custom-marker {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: white;
+    border: 3px solid #ffffff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    position: absolute;
+    transform: translate(-50%, -50%);
+}
+
+.marker-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 2px solid #e5e7eb; /* Light gray border for consistency */
+}
 

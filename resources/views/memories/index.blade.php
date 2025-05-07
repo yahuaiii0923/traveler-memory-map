@@ -4,31 +4,16 @@
 <style>
     #map {
         width: 100%;
-        height: 700px; /* Increased from 500px */
-        max-height: 85vh; /* Adjusted max height */
+        height: 800px;
+        max-height: 90vh;
         overflow: hidden;
         margin-bottom: 1rem;
         border-radius: 8px;
         box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
     }
-    .custom-marker {
-        width: 50px;
-        height: 50px;
-        border-radius: 50%;
-        overflow: hidden;
-        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
-        border: 2px solid #fff;
-    }
-
-    .marker-image {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        border-radius: 50%;
-    }
 
     .carousel-wrapper {
-        background-color: #1f2937; /* gray-800 */
+        background-color: #1f2937;
         display: flex;
         justify-content: center;
         align-items: center;
@@ -36,10 +21,6 @@
         overflow-x: auto;
         -ms-overflow-style: none;
         scrollbar-width: none;
-    }
-
-    .carousel-wrapper::-webkit-scrollbar {
-        display: none;
     }
 
     .carousel-track {
@@ -65,198 +46,165 @@
         align-items: center;
         justify-content: center;
         scroll-snap-align: center;
-        pointer-events: auto;
-        position: relative;
         transition: all 0.3s ease;
-
-        --angle: calc((var(--index) - ((var(--total) - 1) / 2)) * 12deg);
-        transform: rotate(var(--angle)) translateY(-50px) rotate(calc(-1 * var(--angle)));
     }
 
     .year-button:hover {
         background-color: #4b5563;
-        transform: rotate(var(--angle)) translateY(-55px) rotate(calc(-1 * var(--angle))) scale(1.05);
-        z-index: 2;
     }
 
     .year-button.active {
         background-color: #3b82f6;
-        box-shadow: 0 0 0 3px #3b82f6;
-        z-index: 3;
     }
-
-    .year-button.active::after {
-        content: "";
-        position: absolute;
-        top: calc(100% + 5px);
-        left: 50%;
-        transform: translateX(-50%);
-        border-left: 6px solid transparent;
-        border-right: 6px solid transparent;
-        border-top: 6px solid #3b82f6;
-    }
-
-
 </style>
 
 <div class="w-full max-w-7xl mx-auto px-4 py-6">
     <h1 class="text-2xl font-bold text-white mb-4">Your Travel Memories</h1>
-    <a href="{{ route('memories.create') }}" class="bg-blue-500 text-white px-4 py-2 rounded mb-6 inline-block">Add Memory</a>
+    <a href="{{ route('memories.create') }}" class="bg-black text-white px-4 py-2 rounded mb-6 inline-block">+</a>
 
-    <!-- Map -->
-    <div id="map" class="w-full h-[500px] md:h-[600px] lg:h-[700px] max-h-[80vh] overflow-hidden mb-4 rounded shadow relative"></div>
+    <div id="map"></div>
 </div>
 
-<!-- Arc Carousel Below Map -->
 <div class="w-full max-w-7xl mx-auto px-4">
     <div class="carousel-wrapper">
         <div class="carousel-track">
-            <button class="year-button active" onclick="showAllMarkers()" id="all-years-btn" style="--index: 0; --total: {{ is_countable($years) ? count($years) + 1 : 1 }};">
-                All
-            </button>
+            <button class="year-button active" onclick="showAllMarkers()" id="all-years-btn">All</button>
             @if(is_countable($years) && count($years) > 0)
-            @foreach ($years as $index => $year)
-            <button class="year-button" onclick="filterMarkersByYear({{ $year }})" style="--index: {{ $index + 1 }}; --total: {{ count($years) + 1 }};">
-                {{ $year }}
-            </button>
+            @foreach ($years as $year)
+            <button class="year-button" onclick="filterMarkersByYear({{ $year }})">{{ $year }}</button>
             @endforeach
             @endif
         </div>
     </div>
 </div>
 
-
 <script>
     let map;
     let allMarkers = [];
-    let allYearsCenter;
-    let allYearsZoom;
 
-    window.initMap = function () {
+    function initMap() {
         map = new google.maps.Map(document.getElementById("map"), {
             zoom: 4,
-            center: { lat: 0, lng: 0 },
-            mapTypeControl: false,
-            fullscreenControl: false,
-            streetViewControl: false,
-            zoomControl: true
-        });
-
-        setTimeout(() => {
-            google.maps.event.trigger(map, "resize");
-        }, 300);
-
-        window.addEventListener("resize", () => {
-            google.maps.event.trigger(map, "resize");
+            center: { lat: 20, lng: 0 }
         });
 
         const memories = {!! json_encode($memories) !!};
         const bounds = new google.maps.LatLngBounds();
 
-        allMarkers = memories.map(memory => {
-            const position = {
-                lat: parseFloat(memory.latitude),
-                lng: parseFloat(memory.longitude)
-            };
+        memories.forEach(memory => {
+            const position = new google.maps.LatLng(parseFloat(memory.latitude), parseFloat(memory.longitude));
+            const imageUrl = memory.photos && memory.photos.length
+                ? `{{ asset('images/') }}/${memory.photos[0]}`
+                : "{{ asset('images/default.png') }}";
+            const year = new Date(memory.created_at).getFullYear();
 
-            // Create a custom marker with an image swap animation
+            // Create a div for the custom marker with an image inside
             const markerDiv = document.createElement("div");
-            markerDiv.classList.add("custom-marker");
+            markerDiv.className = "custom-marker";
 
-            const markerImage = document.createElement("img");
-            markerImage.classList.add("marker-image");
-            markerDiv.appendChild(markerImage);
+            const img = document.createElement("img");
+            img.src = imageUrl;
+            img.className = "marker-image";
+            markerDiv.appendChild(img);
 
-            let currentPhotoIndex = 0;
-            if (memory.photos && memory.photos.length) {
-                markerImage.src = `{{ asset('images/') }}/${memory.photos[0]}`;
-                setInterval(() => {
-                    currentPhotoIndex = (currentPhotoIndex + 1) % memory.photos.length;
-                    markerImage.src = `{{ asset('images/') }}/${memory.photos[currentPhotoIndex]}`;
-                }, 2000); // Change image every 2 seconds
-            } else {
-                markerImage.src = "{{ asset('images/default.png') }}"; // Fallback image
-            }
-
-            // Create a standard marker
+            // Create a custom marker using the div
             const marker = new google.maps.Marker({
-                position,
-                map,
+                position: position,
+                map: map,
                 title: memory.title,
                 icon: {
-                    url: markerImage.src,
-                    scaledSize: new google.maps.Size(50, 50), // Adjust the size as needed
-                }
+                    url: imageUrl,
+                    scaledSize: new google.maps.Size(60, 60), // Match the CSS size
+                },
+                year: year
             });
 
-            const photoHtml = memory.photos && memory.photos.length
-                ? memory.photos.map(path =>
-                    `<img src="{{ asset('images/') }}/${path}" class="w-full h-40 object-cover rounded mb-3 border" alt="Memory photo">`
-                ).join('')
-                : '';
-
-            const infoWindow = new google.maps.InfoWindow({
-                content: `
-        <div class='bg-white rounded-xl shadow-lg p-6 max-w-md w-full'>
-            <h3 class='text-xl font-bold text-gray-900 mb-3'>${memory.title}</h3>
-            <p class='text-sm text-gray-700 mb-3'>${memory.description}</p>
-            ${photoHtml}
-            ${memory.location_name ? `<p class='text-sm text-gray-500 mb-1'>📍 <em>${memory.location_name}</em></p>` : ''}
-            ${memory.rating ? `<p class='text-sm text-yellow-600 mb-2'>⭐ <strong>Rating:</strong> ${memory.rating}/5</p>` : ''}
-            <p class='text-xs text-gray-400'>🗓️ Added on ${new Date(memory.created_at).getFullYear()}</p>
-        </div>`
-            });
-
-            marker.addListener('click', () => {
-                infoWindow.open(map, marker);
-            });
-
+            allMarkers.push(marker);
             bounds.extend(position);
-            return marker;
         });
 
 
         if (!bounds.isEmpty()) {
-            map.fitBounds(bounds, 100);
-            google.maps.event.addListenerOnce(map, 'bounds_changed', () => {
-                allYearsCenter = map.getCenter();
-                allYearsZoom = map.getZoom();
-            });
+            map.fitBounds(bounds);
         }
-    };
+    }
+
+
+    function createCircularImage(url, size, callback) {
+        const canvas = document.createElement("canvas");
+        canvas.width = size;
+        canvas.height = size;
+        const context = canvas.getContext("2d");
+
+        const img = new Image();
+        img.onload = () => {
+            // Draw a circular image
+            context.beginPath();
+            context.arc(size / 2, size / 2, size / 2, 0, 2 * Math.PI);
+            context.closePath();
+            context.clip();
+            context.drawImage(img, 0, 0, size, size);
+
+            // Optional: Add a border
+            context.lineWidth = 3;
+            context.strokeStyle = "white";
+            context.stroke();
+
+            callback(canvas.toDataURL());
+        };
+        img.src = url;
+    }
+
+    function addMemoryMarker(memory) {
+        const position = new google.maps.LatLng(parseFloat(memory.latitude), parseFloat(memory.longitude));
+        const imageUrl = memory.photos && memory.photos.length
+            ? `{{ asset('images/') }}/${memory.photos[0]}`
+            : "{{ asset('images/default.png') }}";
+        const year = new Date(memory.created_at).getFullYear();
+
+        createCircularImage(imageUrl, 60, (iconUrl) => {
+            const marker = new google.maps.Marker({
+                position: position,
+                map: map,
+                title: memory.title,
+                icon: {
+                    url: iconUrl,
+                    scaledSize: new google.maps.Size(60, 60), // Adjusted size for visibility
+                },
+                year: year
+            });
+
+            allMarkers.push(marker);
+            bounds.extend(position);
+        });
+    }
+
+    memories.forEach(memory => {
+        addMemoryMarker(memory);
+    });
+
 
     function filterMarkersByYear(year) {
         document.querySelectorAll('.year-button').forEach(btn => btn.classList.remove('active'));
-        event.target.classList.add('active');
-
+        event.currentTarget.classList.add('active');
         allMarkers.forEach(marker => {
             marker.setVisible(marker.year === year);
         });
-
-        if (allYearsCenter && allYearsZoom) {
-            map.setCenter(allYearsCenter);
-            map.setZoom(allYearsZoom);
-        }
     }
 
     function showAllMarkers() {
         document.querySelectorAll('.year-button').forEach(btn => btn.classList.remove('active'));
         document.getElementById('all-years-btn').classList.add('active');
-
-        const bounds = new google.maps.LatLngBounds();
         allMarkers.forEach(marker => {
             marker.setVisible(true);
-            bounds.extend(marker.getPosition());
-        });
-
-        map.fitBounds(bounds, 100);
-        google.maps.event.addListenerOnce(map, 'bounds_changed', () => {
-            allYearsCenter = map.getCenter();
-            allYearsZoom = map.getZoom();
         });
     }
+
+    window.onload = function () {
+        initMap();
+    };
 </script>
 
-<script src="https://maps.googleapis.com/maps/api/js?key={{ env('GOOGLE_MAPS_API_KEY') }}&callback=initMap&libraries=marker" async defer></script>
-
+<!-- Placing the script at the bottom to ensure it loads correctly -->
+<script src="https://maps.googleapis.com/maps/api/js?key={{ env('GOOGLE_MAPS_API_KEY') }}&callback=initMap"></script>
 @endsection
