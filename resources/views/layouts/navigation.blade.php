@@ -1,96 +1,87 @@
-<nav class="fixed w-full bg-white/80 backdrop-blur-sm shadow-sm z-50" x-data="{ isOpen: false }">
-    <div class="container mx-auto px-6 py-4">
-        <div class="flex justify-between items-center">
-            <!-- Logo -->
-            <a href="{{ route('home') }}" class="text-2xl font-semibold text-blue-600">
-                MemoryMapper
-            </a>
 
-            <!-- Desktop Menu -->
-            <div class="hidden md:flex space-x-8 items-center">
-                <a href="#how-it-works" class="text-gray-600 hover:text-blue-500 transition-colors">
-                    How it works
-                </a>
-                <a href="{{ route('memories.index') }}" class="text-gray-600 hover:text-blue-500 transition-colors">
-                    Explore
-                </a>
+<nav class="w-full mx-auto px-32 h-full flex items-center justify-between">
+    <!-- Logo -->
+    <div class="flex items-center">
+        <a href="{{ route('home') }}" class="text-2xl font-bold bg-gradient-to-r from-gray-700 to-gray-500 bg-clip-text text-transparent relative group">
+            MemoryMapper
+            <div class="h-[2px] w-0 group-hover:w-full transition-all duration-300 bg-[#c4b8ac] absolute bottom-0"></div>
+        </a>
+    </div>
 
-                <!-- Authentication Links -->
-                <div class="flex items-center space-x-4 ml-4">
-                    @auth
-                        <div x-data="{ open: false }" class="relative">
-                            <button @click="open = !open" class="flex items-center space-x-2">
-                                <span class="text-gray-600">{{ Auth::user()->name }}</span>
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-                                </svg>
-                            </button>
+    <!-- Navigation Links -->
+    <div class="hidden md:flex items-center space-x-8 h-full">
+        <x-nav-link href="{{ route('memories.index') }}" :active="request()->routeIs('memories.index')"
+                   class="text-gray-700 hover:text-[#8a7866] transition-colors">
+            Memories
+        </x-nav-link>
+        @auth
+        <x-nav-link href="{{ route('memories.create') }}" :active="request()->routeIs('memories.create')"
+                   class="text-gray-700 hover:text-[#8a7866] transition-colors">
+            New Memory
+        </x-nav-link>
+        @endauth
+    </div>
 
-                            <div x-show="open" @click.away="open = false"
-                                class="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg py-2">
-                                <a href="{{ route('dashboard') }}" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">
-                                    Dashboard
-                                </a>
-                                <form method="POST" action="{{ route('logout') }}">
-                                    @csrf
-                                    <button type="submit" class="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100">
-                                        Log Out
-                                    </button>
-                                </form>
-                            </div>
-                        </div>
-                    @else
-                        <a href="{{ route('login') }}" class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition-colors">
-                            Sign In
-                        </a>
-                        <a href="{{ route('register') }}" class="text-blue-500 hover:text-blue-600">
-                            Register
-                        </a>
-                    @endauth
-                </div>
-            </div>
+    <!-- Auth Links -->
+    <div class="flex items-center space-x-4">
+        @guest
+        <a href="{{ route('login') }}" class="px-4 py-2 text-gray-700 hover:text-[#6b5e52] transition-colors">
+            Login
+        </a>
+        <a href="{{ route('register') }}" class="px-4 py-2 bg-[#c4b8ac] text-white rounded-lg hover:bg-[#b3a899] transition-colors">
+            Register
+        </a>
+        @else
+        <!-- Mobile Menu Button -->
+        <button @click="open = ! open" class="md:hidden text-gray-700 hover:text-[#6b5e52]">
+            <svg class="h-6 w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
+                <path :class="{'hidden': open, 'inline-flex': ! open }" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                <path :class="{'hidden': ! open, 'inline-flex': open }" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+        </button>
 
-            <!-- Mobile Menu Button -->
-            <div class="md:hidden">
-                <button @click="isOpen = !isOpen" class="text-gray-600 hover:text-blue-500">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-16 6h16" />
-                    </svg>
+        <!-- User Dropdown -->
+        <x-dropdown align="right" width="48">
+            <x-slot name="trigger">
+                <button class="flex items-center text-sm focus:outline-none">
+                    <div class="mr-2 text-gray-700 font-semibold hidden md:inline-block">
+                        {{ Auth::user()->username ?? Auth::user()->name }}
+                    </div>
+                    <div class="w-9 h-9 rounded-full overflow-hidden border-2 border-[#c4b8ac]">
+                        <img src="{{ Auth::user()->profile_photo
+                            ? asset('storage/' . Auth::user()->profile_photo)
+                            : 'https://img.icons8.com/?size=100&id=ABBSjQJK83zf&format=png&color=c4b8ac' }}"
+                            alt="User Photo" class="object-cover w-full h-full">
+                    </div>
                 </button>
-            </div>
-        </div>
+            </x-slot>
 
-        <!-- Mobile Menu -->
-        <div x-show="isOpen" class="md:hidden mt-4 space-y-4">
-            <a href="#how-it-works" class="block text-gray-600 hover:text-blue-500">
-                How it works
-            </a>
-            <a href="{{ route('memories.index') }}" class="block text-gray-600 hover:text-blue-500">
-                Explore
-            </a>
+            <x-dropdown-link href="{{ route('profile.edit') }}">
+                Profile
+            </x-dropdown-link>
 
-            @auth
-                <div class="pt-4 border-t border-gray-200">
-                    <a href="{{ route('dashboard') }}" class="block py-2 text-gray-600">
-                        Dashboard
-                    </a>
-                    <form method="POST" action="{{ route('logout') }}">
-                        @csrf
-                        <button type="submit" class="block py-2 text-gray-600">
-                            Log Out
-                        </button>
-                    </form>
-                </div>
-            @else
-                <div class="pt-4 border-t border-gray-200 space-y-2">
-                    <a href="{{ route('login') }}" class="block w-full text-center bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600">
-                        Sign In
-                    </a>
-                    <a href="{{ route('register') }}" class="block text-center text-blue-500 hover:text-blue-600">
-                        Create Account
-                    </a>
-                </div>
-            @endauth
-        </div>
+            <form method="POST" action="{{ route('logout') }}">
+                @csrf
+                <x-dropdown-link href="{{ route('logout') }}"
+                                 onclick="event.preventDefault(); this.closest('form').submit();">
+                    Log Out
+                </x-dropdown-link>
+            </form>
+        </x-dropdown>
+        @endguest
     </div>
 </nav>
+
+<!-- Mobile Menu -->
+<div class="md:hidden absolute w-full bg-[#dbd3c8] border-t border-[#c4b8ac]/30" x-show="open" @click.away="open = false">
+    <div class="px-4 py-2 space-y-2">
+        <x-responsive-nav-link href="{{ route('memories.index') }}" class="text-gray-700 hover:bg-[#c4b8ac]/20">
+            Memories
+        </x-responsive-nav-link>
+        @auth
+        <x-responsive-nav-link href="{{ route('memories.create') }}" class="text-gray-700 hover:bg-[#c4b8ac]/20">
+            New Memory
+        </x-responsive-nav-link>
+        @endauth
+    </div>
+</div>
