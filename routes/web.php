@@ -1,31 +1,31 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\MemoryController;
+use App\Http\Controllers\MapController;
+use App\Http\Controllers\TestimonialController;
 
-// Public routes (e.g., welcome page)
-Route::get('/', function () {
-    return redirect()->route('memories.index');
-})->name('home');
+// Main route
+Route::get('/', [HomeController::class, 'index'])->name('home');
+Route::get('/home', [HomeController::class, 'index'])->name('home');
 
-// Authentication routes (login, register, etc.)
-Route::middleware('guest')->group(function () {
-    require __DIR__.'/auth.php';
-});
-
-// Protected routes (require authentication)
 Route::middleware(['auth'])->group(function () {
-    // Memories CRUD
-    Route::resource('memories', MemoryController::class);
-
-    // Profile routes
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-
-    // Dashboard (optional)
-    Route::get('/dashboard', function () {
-        return view('dashboard');
-    })->name('dashboard');
 });
+
+Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+Route::get('/map', [MapController::class, 'index'])->name('map');
+
+// Authentication routes (now provided by laravel/ui)
+Auth::routes();
+
+// Memory resource routes
+Route::resource('memories', MemoryController::class);
+
+Route::get('/testimonials', [TestimonialController::class, 'index'])->name('testimonials.index');
+Route::get('/testimonials/create', [TestimonialController::class, 'create'])->name('testimonials.create');
+Route::post('/testimonials', [TestimonialController::class, 'store'])->name('testimonials.store');

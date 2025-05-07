@@ -1,3 +1,75 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Add these fixes */
+.animate-fadeInUp {
+    @apply opacity-0 translate-y-8 transition-all duration-500 ease-out;
+    animation-fill-mode: forwards !important;
+}
+
+.hero {
+    z-index: 10;
+}
+
+.leaflet-top, .leaflet-bottom {
+    z-index: 30 !important;
+}
+
+/* Ensure hero content stays visible */
+.relative.z-10 {
+    z-index: 20 !important;
+}
+
+/* Add to your app.css */
+@layer components {
+    /* Fix header overlap */
+    .pt-header {
+        padding-top: 4rem; /* Match your header height */
+    }
+
+    /* Ensure header stays contained */
+    header {
+        @apply z-50 shadow-sm; /* Ensure header has higher z-index than content */
+    }
+
+    /* Adjust hero positioning */
+    .hero-content {
+        @apply pt-8 md:pt-12;
+    }
+}
+
+/* Remove default browser spacing */
+@layer base {
+    html {
+        @apply scroll-pt-16; /* For anchor links */
+    }
+
+    body {
+        @apply m-0 p-0;
+    }
+}
+
+/* Fix header/content gap */
+main {
+    @apply pt-16; /* h-16 = 4rem = 64px */
+}
+
+/* Ensure header background coverage */
+nav {
+    @apply bg-white !important;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+/* Fix dropdown positioning */
+[x-cloak] {
+    display: none !important;
+}
+
+#travel-map {
+    height: 100%;
+    width: 100%;
+    min-height: 400px;
+    background-color: #dbd3c820;
+}
+
