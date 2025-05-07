@@ -2,6 +2,31 @@
 
 @section('content')
 <style>
+    #map {
+        width: 100%;
+        height: 700px; /* Increased from 500px */
+        max-height: 85vh; /* Adjusted max height */
+        overflow: hidden;
+        margin-bottom: 1rem;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    }
+    .custom-marker {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        overflow: hidden;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+        border: 2px solid #fff;
+    }
+
+    .marker-image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border-radius: 50%;
+    }
+
     .carousel-wrapper {
         background-color: #1f2937; /* gray-800 */
         display: flex;
@@ -70,6 +95,8 @@
         border-right: 6px solid transparent;
         border-top: 6px solid #3b82f6;
     }
+
+
 </style>
 
 <div class="w-full max-w-7xl mx-auto px-4 py-6">
@@ -132,10 +159,34 @@
                 lng: parseFloat(memory.longitude)
             };
 
+            // Create a custom marker with an image swap animation
+            const markerDiv = document.createElement("div");
+            markerDiv.classList.add("custom-marker");
+
+            const markerImage = document.createElement("img");
+            markerImage.classList.add("marker-image");
+            markerDiv.appendChild(markerImage);
+
+            let currentPhotoIndex = 0;
+            if (memory.photos && memory.photos.length) {
+                markerImage.src = `{{ asset('images/') }}/${memory.photos[0]}`;
+                setInterval(() => {
+                    currentPhotoIndex = (currentPhotoIndex + 1) % memory.photos.length;
+                    markerImage.src = `{{ asset('images/') }}/${memory.photos[currentPhotoIndex]}`;
+                }, 2000); // Change image every 2 seconds
+            } else {
+                markerImage.src = "{{ asset('images/default.png') }}"; // Fallback image
+            }
+
+            // Create a standard marker
             const marker = new google.maps.Marker({
                 position,
                 map,
-                title: memory.title
+                title: memory.title,
+                icon: {
+                    url: markerImage.src,
+                    scaledSize: new google.maps.Size(50, 50), // Adjust the size as needed
+                }
             });
 
             const photoHtml = memory.photos && memory.photos.length
@@ -146,38 +197,24 @@
 
             const infoWindow = new google.maps.InfoWindow({
                 content: `
-                <div class='bg-white rounded-xl shadow-lg p-6 max-w-md w-full'>
-                    <h3 class='text-xl font-bold text-gray-900 mb-3'>${memory.title}</h3>
-                    <p class='text-sm text-gray-700 mb-3'>${memory.description}</p>
-                    ${photoHtml}
-                    ${memory.location_name ? `<p class='text-sm text-gray-500 mb-1'>📍 <em>${memory.location_name}</em></p>` : ''}
-                    ${memory.rating ? `<p class='text-sm text-yellow-600 mb-2'>⭐ <strong>Rating:</strong> ${memory.rating}/5</p>` : ''}
-                    <p class='text-xs text-gray-400'>🗓️ Added on ${new Date(memory.created_at).getFullYear()}</p>
-                </div>`
+        <div class='bg-white rounded-xl shadow-lg p-6 max-w-md w-full'>
+            <h3 class='text-xl font-bold text-gray-900 mb-3'>${memory.title}</h3>
+            <p class='text-sm text-gray-700 mb-3'>${memory.description}</p>
+            ${photoHtml}
+            ${memory.location_name ? `<p class='text-sm text-gray-500 mb-1'>📍 <em>${memory.location_name}</em></p>` : ''}
+            ${memory.rating ? `<p class='text-sm text-yellow-600 mb-2'>⭐ <strong>Rating:</strong> ${memory.rating}/5</p>` : ''}
+            <p class='text-xs text-gray-400'>🗓️ Added on ${new Date(memory.created_at).getFullYear()}</p>
+        </div>`
             });
-
-            marker.year = new Date(memory.created_at).getFullYear();
 
             marker.addListener('click', () => {
-                const previousCenter = map.getCenter();
-                const previousZoom = map.getZoom();
-
                 infoWindow.open(map, marker);
-
-                // Recenter to ensure the InfoWindow is fully visible
-                map.panTo(marker.getPosition());
-                map.panBy(0, -100); // Move view slightly upward to accommodate popup
-
-                google.maps.event.addListenerOnce(infoWindow, 'closeclick', () => {
-                    map.setCenter(previousCenter);
-                    map.setZoom(previousZoom);
-                });
             });
-
 
             bounds.extend(position);
             return marker;
         });
+
 
         if (!bounds.isEmpty()) {
             map.fitBounds(bounds, 100);
@@ -220,5 +257,6 @@
     }
 </script>
 
-<script src="https://maps.googleapis.com/maps/api/js?key={{ env('GOOGLE_MAPS_API_KEY') }}&callback=initMap" async defer></script>
+<script src="https://maps.googleapis.com/maps/api/js?key={{ env('GOOGLE_MAPS_API_KEY') }}&callback=initMap&libraries=marker" async defer></script>
+
 @endsection
