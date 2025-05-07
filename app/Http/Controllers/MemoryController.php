@@ -73,3 +73,4 @@ class MemoryController extends Controller
 
         return redirect()->route('memories.index')->with('success', 'Memory saved!');
     }
+}

@@ -12,7 +12,8 @@ Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/home', [HomeController::class, 'index'])->name('home');
 
 Route::middleware(['auth'])->group(function () {
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::get('/profile', [ProfileController::class, 'index'])->name('profile.index');
+    Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
@@ -29,3 +30,7 @@ Route::resource('memories', MemoryController::class);
 Route::get('/testimonials', [TestimonialController::class, 'index'])->name('testimonials.index');
 Route::get('/testimonials/create', [TestimonialController::class, 'create'])->name('testimonials.create');
 Route::post('/testimonials', [TestimonialController::class, 'store'])->name('testimonials.store');
+
+Route::get('/test-auth', function () {
+    return Auth::check() ? 'User is logged in: '.Auth::user()->name : 'Not logged in';
+});

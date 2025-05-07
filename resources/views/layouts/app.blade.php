@@ -14,7 +14,7 @@
             background-color: #dbd3c8;
         }
         header {
-            background-color: #dbd3c8 !important;
+            background-color: #fffdfa !important;
         }
         body {
             background: transparent;
