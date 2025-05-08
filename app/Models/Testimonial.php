@@ -7,13 +7,12 @@ use Illuminate\Database\Eloquent\Model;
 
 class Testimonial extends Model
 {
-    use HasFactory;
-
-    protected $fillable = ['user_id', 'text', 'is_public'];
-
-    // Relationship to link testimonials with users
-    public function user()
-    {
-        return $this->belongsTo(User::class);
-    }
+    protected $fillable = [
+        'name',
+        'username', // Include this
+        'role',
+        'text',
+        'metric',
+        'is_public',
+    ];
 }

@@ -14,6 +14,8 @@ return [
     */
 
     'name' => env('APP_NAME', 'Laravel'),
+    'google_maps_api_key' => env('GOOGLE_MAPS_API_KEY', 'default_key'),
+        'google_maps_map_id' => env('GOOGLE_MAPS_MAP_ID', 'default_map_id'),
 
     /*
     |--------------------------------------------------------------------------
@@ -163,4 +165,6 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
     ],
+
+
 ];

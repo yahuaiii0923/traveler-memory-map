@@ -181,73 +181,74 @@
        </section>
 
     <!-- Testimonials Section -->
+    <!-- Testimonials Section -->
     <section class="py-20 bg-gradient-to-b from-[#f8f6f2] to-[#ede8e1]">
-            <div class="container mx-auto px-4">
-                <div class="text-center mb-16">
-                    <h2 class="text-4xl font-bold text-[#374151] mb-4">What Explorers Say & Memory Stats</h2>
-                    <p class="text-xl text-[#374151]/90">Reflections and numbers from your fellow Memory Mappers</p>
-                </div>
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl font-bold text-[#374151] mb-4">What Explorers Say & Memory Stats</h2>
+                <p class="text-xl text-[#374151]/90">Reflections and numbers from your fellow Memory Mappers</p>
+            </div>
 
-                <!-- Testimonials -->
-                <div class="grid md:grid-cols-3 gap-8 mb-20">
-                    @foreach($testimonials as $testimonial)
-                        <div class="bg-white p-6 rounded-xl shadow-sm border border-[#dbd3c8] hover:shadow-md transition-all">
-                            <div class="flex items-start mb-4">
-                                <img src="https://source.unsplash.com/100x100/?portrait-{{ $loop->index }}"
-                                     class="w-12 h-12 rounded-full mr-4 border-2 border-[#dbd3c8] hover:border-[#c4b8ac] transition-colors"
-                                     alt="{{ $testimonial->name }}">
-                                <div>
-                                    <h4 class="font-bold text-[#374151]">{{ $testimonial->name }}</h4>
-                                    <p class="text-sm text-[#374151]">{{ $testimonial->role }}</p>
-                                </div>
+            <!-- Testimonials -->
+            <div class="grid md:grid-cols-3 gap-8 mb-20">
+                @foreach($testimonials as $testimonial)
+                    <div class="bg-white p-6 rounded-xl shadow-sm border border-[#dbd3c8] hover:shadow-md transition-all">
+                        <div class="flex items-start mb-4">
+                            <img src="https://source.unsplash.com/100x100/?portrait-{{ $loop->index }}"
+                                 class="w-12 h-12 rounded-full mr-4 border-2 border-[#dbd3c8] hover:border-[#c4b8ac] transition-colors"
+                                 alt="{{ $testimonial->name }}">
+                            <div>
+                                <h4 class="font-bold text-[#374151]">{{ $testimonial->name }} ({{ $testimonial->username }})</h4>
+                                <p class="text-sm text-[#374151]">{{ $testimonial->role }}</p>
                             </div>
-                            <p class="text-[#374151]/90 mb-4">{{ $testimonial->text }}</p>
-                            <div class="flex items-center text-[#374151] text-sm">
-                                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
-                                </svg>
-                                {{ $testimonial->metric }}
-                            </div>
-                            @if($testimonial->memory_slug && $testimonial->is_public)
-                                <a href="{{ route('memories.show', $testimonial->memory_slug) }}"
-                                   class="mt-3 inline-block text-sm text-[#374151] hover:underline">
-                                    → View This Memory
-                                </a>
-                            @endif
                         </div>
-                    @endforeach
-                    <div class="text-center mt-10 col-span-full">
-                        <a href="{{ route('testimonials.index') }}" class="text-[#11bdbd] hover:underline font-medium mr-4">
-                            → View all testimonials
-                        </a>
-                        <a href="{{ route('testimonials.create') }}" class="text-[#11bdbd] hover:underline font-medium">
-                            → Share your own testimonial
-                        </a>
-                    </div>
-                </div>
-
-                <!-- Stats -->
-                <div class="grid md:grid-cols-3 gap-8 text-center mb-20">
-                    <div class="bg-white p-8 rounded-xl shadow-sm border border-[#dbd3c8]">
-                        <div class="text-5xl font-bold text-[#374151] mb-2">{{ $stats['memories'] }}</div>
-                        <div class="text-[#374151] uppercase text-sm tracking-wide">Memories Created</div>
-                        <p class="text-[#374151] mt-2">Journey moments preserved</p>
-                    </div>
-                    <div class="bg-white p-8 rounded-xl shadow-sm border border-[#dbd3c8]">
-                        <div class="text-5xl font-bold text-[#374151] mb-2">
-                            {{ $stats['countries'] ?? 'N/A' }}
+                        <p class="text-[#374151]/90 mb-4">{{ $testimonial->text }}</p>
+                        <div class="flex items-center text-[#374151] text-sm">
+                            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                            </svg>
+                            {{ $testimonial->metric }}
                         </div>
-                        <div class="text-[#374151] uppercase text-sm tracking-wide">Countries Mapped</div>
-                        <p class="text-[#374151] mt-2">Places explored around the world</p>
+                        @if($testimonial->memory_slug && $testimonial->is_public)
+                            <a href="{{ route('memories.show', $testimonial->memory_slug) }}"
+                               class="mt-3 inline-block text-sm text-[#374151] hover:underline">
+                                → View This Memory
+                            </a>
+                        @endif
                     </div>
-                    <div class="bg-white p-8 rounded-xl shadow-sm border border-[#dbd3c8]">
-                        <div class="text-5xl font-bold text-[#374151] mb-2">{{ $stats['photos'] }}</div>
-                        <div class="text-[#374151] uppercase text-sm tracking-wide">Memorable Photos</div>
-                        <p class="text-[#374151] mt-2">Captured memories shared</p>
-                    </div>
+                @endforeach
+                <div class="text-center mt-10 col-span-full">
+                    <a href="{{ route('testimonials.index') }}" class="text-[#11bdbd] hover:underline font-medium mr-4">
+                        → View all testimonials
+                    </a>
+                    <a href="{{ route('testimonials.create') }}" class="text-[#11bdbd] hover:underline font-medium">
+                        → Share your own testimonial
+                    </a>
                 </div>
             </div>
-        </section>
+
+            <!-- Stats -->
+            <div class="grid md:grid-cols-3 gap-8 text-center mb-20">
+                <div class="bg-white p-8 rounded-xl shadow-sm border border-[#dbd3c8]">
+                    <div class="text-5xl font-bold text-[#374151] mb-2">{{ $stats['memories'] }}</div>
+                    <div class="text-[#374151] uppercase text-sm tracking-wide">Memories Created</div>
+                    <p class="text-[#374151] mt-2">Journey moments preserved</p>
+                </div>
+                <div class="bg-white p-8 rounded-xl shadow-sm border border-[#dbd3c8]">
+                    <div class="text-5xl font-bold text-[#374151] mb-2">
+                        {{ $stats['countries'] ?? 'N/A' }}
+                    </div>
+                    <div class="text-[#374151] uppercase text-sm tracking-wide">Countries Mapped</div>
+                    <p class="text-[#374151] mt-2">Places explored around the world</p>
+                </div>
+                <div class="bg-white p-8 rounded-xl shadow-sm border border-[#dbd3c8]">
+                    <div class="text-5xl font-bold text-[#374151] mb-2">{{ $stats['photos'] }}</div>
+                    <div class="text-[#374151] uppercase text-sm tracking-wide">Memorable Photos</div>
+                    <p class="text-[#374151] mt-2">Captured memories shared</p>
+                </div>
+            </div>
+        </div>
+    </section>
 
         <!-- Dynamic CTA Section -->
         <section class="relative bg-[#dbd3c8] py-20 overflow-hidden">

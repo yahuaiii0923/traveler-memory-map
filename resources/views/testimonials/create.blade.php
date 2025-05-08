@@ -7,10 +7,6 @@
     <form method="POST" action="{{ route('testimonials.store') }}">
         @csrf
         <div class="mb-4">
-            <label class="block text-sm font-semibold text-gray-700">Name</label>
-            <input type="text" name="name" class="w-full p-3 rounded border border-gray-300" required>
-        </div>
-        <div class="mb-4">
             <label class="block text-sm font-semibold text-gray-700">Role</label>
             <input type="text" name="role" class="w-full p-3 rounded border border-gray-300">
         </div>
