@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('testimonials', function (Blueprint $table) {
             $table->id(); // Primary key (auto-increment)
+            $table->string('profile_photo')->nullable();
             $table->string('name'); // User's name
             $table->string('username'); // Unique username
             $table->string('role')->nullable(); // Role of the user

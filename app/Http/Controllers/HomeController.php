@@ -13,7 +13,8 @@ class HomeController extends Controller
 {
     public function index()
     {
-        $testimonials = Testimonial::select('testimonials.*')
+        $testimonials = Testimonial::join('users', 'testimonials.username', '=', 'users.username')
+            ->select('testimonials.*', 'users.profile_photo as user_photo') // Alias for easier access
             ->where('testimonials.is_public', 1)
             ->latest()
             ->limit(3)
