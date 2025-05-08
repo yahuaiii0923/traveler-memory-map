@@ -11,6 +11,7 @@ use App\Http\Controllers\TestimonialController;
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/home', [HomeController::class, 'index'])->name('home');
 
+
 Route::middleware(['auth'])->group(function () {
     Route::get('/profile', [ProfileController::class, 'index'])->name('profile.index');
     Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -27,6 +28,8 @@ Auth::routes();
 // Memory resource routes
 Route::resource('memories', MemoryController::class);
 Route::get('/memories/create', [MemoryController::class, 'create'])->name('memories.create');
+Route::get('/memories/{id}', [MemoryController::class, 'show'])->name('memories.show');
+
 
 Route::get('/testimonials', [TestimonialController::class, 'index'])->name('testimonials.index');
 Route::get('/testimonials/create', [TestimonialController::class, 'create'])->name('testimonials.create');
@@ -42,3 +45,4 @@ Route::post('/contact', function (Request $request) {
     return redirect()->back()->with('message', 'Your message has been sent!');
 })->name('contact.submit');
 Route::view('/privacy', 'privacy')->name('privacy');
+

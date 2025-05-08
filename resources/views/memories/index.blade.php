@@ -8,8 +8,8 @@
     }
 
     .custom-marker {
-        width: 30px;
-        height: 30px;
+        width: 40px;
+        height: 40px;
         border-radius: 50%;
         overflow: hidden;
         display: flex;
@@ -20,6 +20,7 @@
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
         position: absolute;
         transform: translate(-50%, -50%);
+        cursor: pointer; /* Change cursor to pointer */
     }
 
     .marker-image {
@@ -27,6 +28,45 @@
         height: 100%;
         object-fit: cover;
         border-radius: 50%;
+    }
+
+    .popup-container {
+        position: absolute;
+        background-color: white;
+        padding: 10px;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+        max-width: 250px;
+        z-index: 1000;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .popup-image {
+        width: 100%;
+        height: auto;
+        border-radius: 6px;
+        margin-bottom: 5px;
+        cursor: pointer; /* Make image clickable */
+    }
+
+    .close-button {
+        position: absolute;
+        top: 5px;
+        right: 5px;
+        background-color: #f87171;
+        color: white;
+        border: none;
+        border-radius: 50%;
+        width: 24px;
+        height: 24px;
+        cursor: pointer;
+        font-weight: bold;
+    }
+
+    .close-button:hover {
+        background-color: #ef4444;
     }
 
     #map {
@@ -52,6 +92,51 @@
 
     .map-type-button:hover {
         background-color: #4b5563;
+    }
+    .popup-container {
+        position: fixed;
+        bottom: 100px;
+        left: 50%;
+        transform: translateX(-50%);
+        background-color: #fff;
+        border-radius: 8px;
+        padding: 15px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        z-index: 1000;
+        max-width: 300px;
+        text-align: center;
+    }
+
+    .popup-title {
+        font-size: 1.25rem;
+        margin-bottom: 8px;
+    }
+
+    .image-gallery {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+    }
+
+    .popup-image {
+        width: 80px;
+        height: 80px;
+        object-fit: cover;
+        border-radius: 4px;
+    }
+
+    .details-link {
+        display: inline-block;
+        margin-top: 10px;
+        padding: 6px 12px;
+        background-color: #006d77;
+        color: #fff;
+        border-radius: 4px;
+        text-decoration: none;
+    }
+
+    .details-link:hover {
+        background-color: #004d56;
     }
 
 
@@ -229,6 +314,7 @@
         const markerImage = document.createElement("img");
         markerImage.classList.add("marker-image");
         markerImage.src = imageUrl;
+        markerImage.alt = "Memory Image";
         markerElement.appendChild(markerImage);
 
         const marker = new google.maps.marker.AdvancedMarkerElement({
@@ -239,7 +325,73 @@
 
         marker.memoryYear = new Date(memory.created_at).getFullYear();
         allMarkers.push(marker);
+
+        // Add click event to show popup
+        markerElement.addEventListener("click", () => openPopup(memory, position));
     }
+
+    function openPopup(memory, position) {
+        // Close any existing popup
+        const existingPopup = document.querySelector(".popup-container");
+        if (existingPopup) existingPopup.remove();
+
+        // Create the popup container
+        const popupContainer = document.createElement("div");
+        popupContainer.classList.add("popup-container");
+
+        // Create a close button
+        const closeButton = document.createElement("button");
+        closeButton.classList.add("close-button");
+        closeButton.textContent = "✖";
+        closeButton.onclick = () => popupContainer.remove();
+        popupContainer.appendChild(closeButton);
+
+        // Add images from memory.photos
+        if (memory.photos && memory.photos.length) {
+            const imageGrid = document.createElement("div");
+            imageGrid.classList.add("image-grid");
+
+            memory.photos.forEach((photo) => {
+                let photoPath = photo.replace(/^\/+|\/+$/g, '');
+                if (!photoPath.startsWith("storage/images/")) {
+                    photoPath = `storage/images/${photoPath}`;
+                }
+
+                const imageUrl = `/${photoPath}`;
+
+                const img = document.createElement("img");
+                img.src = imageUrl;
+                img.alt = "Memory Image";
+                img.classList.add("popup-image");
+
+                // Make the image clickable to open the detailed memory page
+                img.onclick = () => window.location.href = `/memories/${memory.id}`;
+                imageGrid.appendChild(img);
+            });
+
+            popupContainer.appendChild(imageGrid);
+        } else {
+            const noImageText = document.createElement("p");
+            noImageText.textContent = "No images available";
+            popupContainer.appendChild(noImageText);
+        }
+
+        // Append the popup to the document body
+        document.body.appendChild(popupContainer);
+
+        // Position the popup near the marker
+        popupContainer.style.left = `${position.lng()}px`;
+        popupContainer.style.top = `${position.lat()}px`;
+    }
+
+    // Close popup when clicking outside
+    window.addEventListener("click", (event) => {
+        const popup = document.querySelector(".popup-container");
+        if (popup && !popup.contains(event.target)) {
+            popup.remove();
+        }
+    });
+
 
     function filterMarkers(year) {
         allMarkers.forEach(marker => {
@@ -334,10 +486,12 @@
 
 
 </script>
-
 <script async defer
-        src="https://maps.googleapis.com/maps/api/js?key={{ env('GOOGLE_MAPS_API_KEY') }}&libraries=marker&callback=initMap">
+        src="https://maps.googleapis.com/maps/api/js?key={{ env('GOOGLE_MAPS_API_KEY') }}&libraries=marker,places&callback=initMap">
 </script>
+
+
+
 
 
 @endsection

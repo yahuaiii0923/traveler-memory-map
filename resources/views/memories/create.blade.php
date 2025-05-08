@@ -1,156 +1,77 @@
 @extends('layouts.app')
 
 @section('content')
-  <div class="container mx-auto p-4">
-    <h1 class="text-2xl font-bold mb-4">Add New Memory</h1>
+<div class="container mx-auto my-12 p-20 bg-[#dbd3c8]/30 shadow-2xl rounded-3xl border border-[#dbd3c8] max-w-4xl">
+    <h1 class="text-5xl font-bold text-gray-800 mb-12 text-center">Add New Memory</h1>
 
     <!-- Back Button -->
     <a href="{{ route('memories.index') }}"
-       class="inline-block mb-4 text-blue-600 hover:underline">
-       ← Back to Memories
+       class="inline-block mb-8 text-[#5f5240] hover:text-[#aee2e8] font-medium transition-all">
+        ← Back to Memories
     </a>
-@if ($errors->any())
-    <div class="bg-red-100 text-red-800 p-4 rounded mb-4">
-        <ul class="list-disc pl-5">
+
+    @if ($errors->any())
+    <div class="bg-red-100 text-red-800 p-4 rounded-lg mb-8">
+        <ul class="list-disc pl-6">
             @foreach ($errors->all() as $error)
-                <li class="text-sm">{{ $error }}</li>
+            <li class="text-base">{{ $error }}</li>
             @endforeach
         </ul>
     </div>
-@endif
+    @endif
 
-   <form action="{{ route('memories.store') }}" method="POST" enctype="multipart/form-data" class="space-y-6">
-       @csrf
+    <form action="{{ route('memories.store') }}" method="POST" enctype="multipart/form-data" class="space-y-10">
+        @csrf
 
-       <!-- Title -->
-       <div>
-           <label for="title" class="block text-sm font-medium text-white mb-1">Title</label>
-           <input type="text" name="title" id="title" required
-                  class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white text-black">
-       </div>
+        <!-- Title -->
+        <div class="space-y-3">
+            <label for="title" class="block text-2xl font-semibold text-gray-800">Memory Title</label>
+            <input type="text" name="title" id="title" required
+                   class="w-full px-6 py-4 rounded-lg border border-[#dbd3c8] focus:outline-none focus:ring-2 focus:ring-[#aee2e8] bg-[#f8f6f2] text-gray-800">
+        </div>
 
-       <!-- Description -->
-       <div>
-           <label for="description" class="block text-sm font-medium text-white mb-1">Description</label>
-           <textarea name="description" id="description" rows="4" required
-                     class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white text-black"></textarea>
-       </div>
+        <!-- Description -->
+        <div class="space-y-3">
+            <label for="description" class="block text-2xl font-semibold text-gray-800">Memory Description</label>
+            <textarea name="description" id="description" rows="6" required
+                      class="w-full px-6 py-4 rounded-lg border border-[#dbd3c8] focus:outline-none focus:ring-2 focus:ring-[#aee2e8] bg-[#f8f6f2] text-gray-800"></textarea>
+        </div>
 
-       <!-- Location Name -->
-       <div>
-           <label for="location_name" class="block text-sm font-medium text-white mb-1">Search Location</label>
-           <input id="location_name" name="location_name" type="text"
-                  placeholder="Type a place name..."
-                  class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white text-black">
+        <!-- Location Name -->
+        <div class="space-y-3">
+            <label for="location_name" class="block text-2xl font-semibold text-gray-800">Location</label>
+            <input id="location_name" name="location_name" type="text" placeholder="Search for a location..."
+                   class="w-full px-6 py-4 rounded-lg border border-[#dbd3c8] focus:outline-none focus:ring-2 focus:ring-[#aee2e8] bg-[#f8f6f2] text-gray-800">
+        </div>
 
-      <input type="hidden" name="latitude" id="latitude" value="{{ old('latitude') }}">
-      <input type="hidden" name="longitude" id="longitude" value="{{ old('longitude') }}">
+        <!-- Photo Upload -->
+        <div class="space-y-3">
+            <label class="block text-2xl font-semibold text-gray-800">Upload Photos</label>
+            <input type="file" name="photos[]" id="photos" multiple accept="image/*"
+                   class="w-full file:px-5 file:py-3 file:rounded-lg file:bg-[#6b7280] file:text-white hover:file:bg-[#aee2e8] transition-all">
+            <div id="photo-preview" class="mt-6 grid grid-cols-2 gap-8"></div>
+        </div>
 
-       </div>
-       <!-- Photo Upload -->
-       <div>
-           <label class="block text-sm font-medium text-white mb-1">Upload Photos</label>
-           <input
-               type="file"
-               name="photos[]"
-               id="photos"
-               multiple
-               accept="image/*"
-               class="w-full file:px-4 file:py-2 file:rounded-lg file:border-0 file:bg-blue-600 file:text-white file:cursor-pointer bg-white text-black rounded-lg border border-gray-300"
-           >
-
-           <!-- Preview container -->
-           <div id="photo-preview" class="mt-4 grid grid-cols-2 md:grid-cols-4 gap-4"></div>
-       </div>
-
-
-
-       <!-- Rating -->
-    <div>
-        <label for="rating" class="block text-sm font-medium text-white mb-1">Rating (1–5)</label>
-        <select name="rating" id="rating"
-                class="w-full px-4 py-2 rounded-lg border border-gray-300 bg-white text-black focus:outline-none focus:ring-2 focus:ring-blue-500">
-            <option value="">-- Rate your memory --</option>
-            @for ($i = 1; $i <= 5; $i++)
+        <!-- Rating -->
+        <div class="space-y-3">
+            <label for="rating" class="block text-2xl font-semibold text-gray-800">Memory Rating</label>
+            <select name="rating" id="rating"
+                    class="w-full px-6 py-4 rounded-lg border border-[#dbd3c8] bg-[#f8f6f2] text-gray-800 focus:outline-none focus:ring-2 focus:ring-[#aee2e8]">
+                <option value="">-- Select Rating (1-5) --</option>
+                @for ($i = 1; $i <= 5; $i++)
                 <option value="{{ $i }}">{{ $i }}</option>
-            @endfor
-        </select>
-    </div>
-</div>
+                @endfor
+            </select>
+        </div>
 
-
-       <!-- Submit -->
-       <div>
-           <button type="submit"
-                   class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg shadow transition duration-200">
-               Save
-           </button>
-       </div>
-   </form>
-
-<script>
-    let autocomplete;
-
-    function initAutocomplete() {
-        const input = document.getElementById('location_name');
-        autocomplete = new google.maps.places.Autocomplete(input);
-
-        autocomplete.addListener('place_changed', () => {
-            const place = autocomplete.getPlace();
-
-            if (!place.geometry) {
-                alert("No location details available for that input.");
-                return;
-            }
-
-            const lat = place.geometry.location.lat();
-            const lng = place.geometry.location.lng();
-
-            document.getElementById('latitude').value = lat;
-            document.getElementById('longitude').value = lng;
-        });
-    }
-
-    // Load Google Maps Script with callback
-    (function loadGoogleScript() {
-        const script = document.createElement('script');
-        script.src = "https://maps.googleapis.com/maps/api/js?key={{ env('GOOGLE_MAPS_API_KEY') }}&libraries=places&callback=initAutocomplete";
-        script.async = true;
-        script.defer = true;
-        document.head.appendChild(script);
-    })();
-    document.querySelector("form").addEventListener("submit", function (e) {
-        const lat = document.getElementById('latitude').value;
-        const lng = document.getElementById('longitude').value;
-
-        if (!lat || !lng) {
-            e.preventDefault();
-            alert("Please select a valid location from the suggestions.");
-        }
-    });
-
-</script>
-<script>
-    document.getElementById('photos').addEventListener('change', function (e) {
-        const previewContainer = document.getElementById('photo-preview');
-        previewContainer.innerHTML = ''; // clear previous previews
-
-        Array.from(e.target.files).forEach(file => {
-            const reader = new FileReader();
-
-            reader.onload = function (event) {
-                const img = document.createElement('img');
-                img.src = event.target.result;
-                img.className = 'w-full h-32 object-cover rounded border';
-                previewContainer.appendChild(img);
-            };
-
-            reader.readAsDataURL(file);
-        });
-    });
-</script>
-
-
+        <!-- Submit -->
+        <div class="text-center mt-10">
+            <button type="submit"
+                    class="bg-[#6b7280] hover:bg-[#aee2e8] text-white px-12 py-5 rounded-full shadow-xl font-semibold transition duration-300">
+                Save Your Memory
+            </button>
+        </div>
+    </form>
 
 </div>
 @endsection
