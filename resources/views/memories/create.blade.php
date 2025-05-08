@@ -45,6 +45,10 @@
                    class="w-full px-6 py-3 rounded-lg border border-[#dbd3c8] focus:outline-none focus:ring-2 focus:ring-[#aee2e8] bg-[#f8f6f2] text-gray-800">
         </div>
 
+        <!-- Hidden fields for latitude and longitude -->
+        <input type="hidden" id="latitude" name="latitude">
+        <input type="hidden" id="longitude" name="longitude">
+
         <!-- Photo Upload -->
         <div class="space-y-2">
             <label class="block text-2xl font-semibold text-gray-800">Upload Photos</label>
@@ -73,5 +77,42 @@
             </button>
         </div>
     </form>
+    <script>
+        let autocomplete;
+
+        function initAutocomplete() {
+            const locationInput = document.getElementById('location_name');
+
+            if (locationInput) {
+                autocomplete = new google.maps.places.Autocomplete(locationInput, {
+                    types: ['geocode'],  // Restrict to addresses
+                    componentRestrictions: { country: 'ie' }  // Restrict to Ireland
+                });
+
+                // Listen for the place changed event
+                autocomplete.addListener('place_changed', function () {
+                    const place = autocomplete.getPlace();
+                    if (place.geometry) {
+                        const latitude = place.geometry.location.lat();
+                        const longitude = place.geometry.location.lng();
+
+                        // Store coordinates in hidden inputs
+                        document.getElementById('latitude').value = latitude;
+                        document.getElementById('longitude').value = longitude;
+
+                        console.log('Selected place:', place);
+                        console.log('Latitude:', latitude, 'Longitude:', longitude);
+                    } else {
+                        console.error('No geometry data available for this place.');
+                    }
+                });
+            } else {
+                console.error('Location input element not found.');
+            }
+        }
+    </script>
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key={{ env('GOOGLE_MAPS_API_KEY') }}&callback=initAutocomplete&libraries=places"></script>
+
 </div>
+
 @endsection
