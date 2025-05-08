@@ -3,8 +3,7 @@
 Traveler Memory Map is a web application built using Laravel that allows users to save and visualize their travel memories on an interactive map. 
 Users can add memories with locations, photos, and descriptions, and view them as markers on the map.
 
-## ![ChatGPT Image May 8, 2025, 09_33_44 AM](https://github.com/user-attachments/assets/d6849d2b-7bdc-4c8c-b718-29f7646c827f)
-Features
+## ![ChatGPT Image May 8, 2025, 09_33_44 AM](https://github.com/user-attachments/assets/d6849d2b-7bdc-4c8c-b718-29f7646c827f)Features
 
 - Add new travel memories with title, description, location, and photos.
 - Interactive map to visualize travel memories.
