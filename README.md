@@ -12,7 +12,7 @@ Users can add memories with locations, photos, and descriptions, and view them a
 - Responsive design with a modern UI.
 - Year-wise filtering for better navigation.
 
-## Installation Instructions
+## ![a7d0fc38952e427546e8783a79d5f6d8](https://github.com/user-attachments/assets/50be5ad6-883b-4b98-a66f-68f5421b7960)Installation Instructions
 
 ### Step 1: Clone the Repository
 ```bash
