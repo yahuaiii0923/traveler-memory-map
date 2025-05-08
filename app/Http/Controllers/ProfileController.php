@@ -13,7 +13,7 @@ class ProfileController extends Controller
 {
     public function index()
     {
-        $user = Auth::user()->load(['memories', 'testimonials']);
+        $user = Auth::user(); // No need to load 'profile_photo' explicitly
         return view('profile.index', compact('user'));
     }
     /**

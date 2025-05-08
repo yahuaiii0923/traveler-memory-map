@@ -22,7 +22,7 @@ class User extends Authenticatable
         'username',
         'email',
         'password',
-        'profile_photo_path',
+        'profile_photo',
     ];
 
     /**
@@ -55,6 +55,6 @@ class User extends Authenticatable
 
     public function testimonials()
     {
-        return $this->hasMany(Testimonial::class);
+        return $this->hasMany(Testimonial::class, 'username', 'username');
     }
 }

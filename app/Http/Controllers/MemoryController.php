@@ -36,15 +36,15 @@ class MemoryController extends Controller
 
         // Get the years from the memories created_at timestamps
         $years = $allMemories->pluck('created_at')
-            ->map(fn($date) => \Carbon\Carbon::parse($date)->year)
-            ->unique()
-            ->sort()
-            ->values();
+                ->map(fn($date) => \Carbon\Carbon::parse($date)->year)
+                ->unique()
+                ->sort()
+                ->values();
 
         return view('memories.index', [
-            'memories' => $memories,
-            'years' => $years
-        ]);
+                'memories' => $allMemories,  // Pass the original collection
+                'years' => $years
+            ]);
     }
 
     // Store method to add a new memory
@@ -76,8 +76,9 @@ class MemoryController extends Controller
         // Save the uploaded photos
         if ($request->hasFile('photos')) {
             foreach ($request->file('photos') as $photo) {
-                // Store the photo in the 'public/images' directory
-                $path = $photo->store('images', 'public');
+                $fileName = $photo->getClientOriginalName();
+                $photo->move(public_path('images'), $fileName);
+
 
                 // Remove the 'public/' prefix from the stored path
                 $path = str_replace('public/', '', $path);
@@ -86,6 +87,7 @@ class MemoryController extends Controller
                 Photo::create([
                     'memory_id' => $memory->id,
                     'file_path' => $path, // Save the cleaned file path
+
                 ]);
             }
         }

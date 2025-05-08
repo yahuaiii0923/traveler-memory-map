@@ -63,7 +63,7 @@ class RegisterController extends Controller
                 'confirmed',
                 'regex:/^(?=.*[a-zA-Z])(?=.*\d)(?=.*[\W_]).+$/'
             ],
-            'profile_photo' => ['nullable', 'image', 'max:2048'],
+            'profile_photo' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif', 'max:2048'],
         ], [
             'username.regex' => 'Username may only contain letters, numbers, and underscores.',
             'password.regex' => 'Password must contain at least one letter, one number, and one special character.',
@@ -81,8 +81,9 @@ class RegisterController extends Controller
     {
         $profilePhotoPath = null;
 
+        // Check if profile photo is uploaded
         if (request()->hasFile('profile_photo')) {
-            $profilePhotoPath = request()->file('profile_photo')->store('profile_photos', 'public');
+           $profilePhotoPath = request()->file('profile_photo')->store('profile_photos', 'public');
         }
 
         return User::create([
@@ -90,7 +91,7 @@ class RegisterController extends Controller
             'username' => $data['username'],
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
-            'profile_photo' => $profilePhotoPath ?? 'default.png',
+            'profile_photo' => $profilePhotoPath,
         ]);
     }
 }
