@@ -74,5 +74,5 @@ jobs:
         with:
           app-name: 'traveler-memory-map'
           slot-name: 'Production'
-          package: .
+          package: release.zip
           
