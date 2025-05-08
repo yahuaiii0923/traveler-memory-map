@@ -6,8 +6,8 @@
     <div class="relative bg-[#374151] p-8 rounded-xl shadow-lg mb-8 text-center">
         <div class="flex items-center justify-center">
             <div class="w-32 h-32 p-1 rounded-full overflow-hidden border-4 border-[#f5f0e9]">
-                <img src="{{ $user->profile_photo ? asset('storage/' . $user->profile_photo) : 'https://img.icons8.com/?size=100&id=ABBSjQJK83zf&format=png&color=f5f0e9' }}"
-                     alt="Profile Photo" class="w-full h-full object-cover">
+              <img src="{{ $user->profile_photo ? asset('storage/' . $user->profile_photo) : 'https://img.icons8.com/?size=100&id=ABBSjQJK83zf&format=png&color=f5f0e9' }}"
+                   alt="Profile Photo" class="w-32 h-32 rounded-full">
             </div>
         </div>
         <h1 class="text-4xl font-bold text-[#f5f0e9] mt-4">{{ $user->name }}</h1>
