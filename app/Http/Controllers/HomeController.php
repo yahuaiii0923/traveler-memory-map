@@ -3,20 +3,30 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\User;
+use App\Models\Memory;
+use App\Models\Photo;
 use App\Models\Testimonial;
+use Illuminate\Support\Facades\Schema;
 
 class HomeController extends Controller
 {
     public function index()
     {
-        return view('home', [
-            'googleMapsApiKey' => env('GOOGLE_MAPS_API_KEY'),
-            'testimonials' => Testimonial::where('is_public', true)->latest()->take(3)->get(),
-            'stats' => [
-                'memories' => '75K+',
-                'countries' => '164',
-                'photos' => '1.2M'
-            ]
-        ]);
+        $testimonials = Testimonial::join('users', 'testimonials.username', '=', 'users.username')
+            ->select('testimonials.*', 'users.profile_photo as user_photo') // Alias for easier access
+            ->where('testimonials.is_public', 1)
+            ->latest()
+            ->limit(3)
+            ->get();
+
+        $stats = [
+            'users' => User::count(),
+            'memories' => Memory::count(),
+            'countries' => Memory::distinct('location_name')->count(),
+            'photos' => Photo::count(),
+        ];
+
+        return view('home', compact('stats', 'testimonials'));
     }
 }

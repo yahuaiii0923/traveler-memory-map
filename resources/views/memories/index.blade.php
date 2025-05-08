@@ -59,8 +59,6 @@
 
     async function createMarker(memory, position) {
         const imageUrl = await getImageUrl(memory);
-
-        // Create a custom HTML element for the marker
         const markerElement = document.createElement('div');
         markerElement.style.width = '50px';
         markerElement.style.height = '50px';
@@ -69,7 +67,6 @@
         markerElement.style.backgroundSize = 'cover';
         markerElement.style.border = '2px solid #374151';
 
-        // Check if AdvancedMarkerElement exists before creating the marker
         if (google.maps.marker && google.maps.marker.AdvancedMarkerElement) {
             const marker = new google.maps.marker.AdvancedMarkerElement({
                 map: map,
@@ -79,8 +76,6 @@
             });
             marker.memoryYear = new Date(memory.created_at).getFullYear();
             allMarkers.push(marker);
-        } else {
-            console.error("AdvancedMarkerElement is not available. Check your script configuration.");
         }
     }
 
@@ -92,8 +87,6 @@
         return "{{ asset('images/default.png') }}";
     }
 
-
-
     function updateYearButtons() {
         const yearFilters = document.getElementById("yearFilters");
         yearFilters.innerHTML = `<button onclick="filterMarkers('all')" class="bg-gray-700 text-gray-400 px-4 py-2 rounded-full transition-transform transform hover:scale-110">All Years</button>`;
@@ -104,16 +97,12 @@
 
     function filterMarkers(year) {
         allMarkers.forEach(marker => {
-            const markerYear = marker.memoryYear;
-            marker.setMap((year === 'all' || markerYear === parseInt(year)) ? map : null);
+            marker.setMap((year === 'all' || marker.memoryYear === parseInt(year)) ? map : null);
         });
     }
-
-
 </script>
 
 <script async defer src="https://maps.googleapis.com/maps/api/js?key={{ env('GOOGLE_MAPS_API_KEY') }}&callback=initMap&libraries=marker&v=beta"></script>
-
 
 <style>
     .scrollbar-hide::-webkit-scrollbar {
