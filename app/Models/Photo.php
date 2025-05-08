@@ -2,13 +2,10 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Photo extends Model
 {
-    use HasFactory;
-
     protected $fillable = ['memory_id', 'file_path'];
 
     public function memory()
@@ -16,4 +13,3 @@ class Photo extends Model
         return $this->belongsTo(Memory::class);
     }
 }
-

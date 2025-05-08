@@ -20,11 +20,6 @@
         @include('layouts.navigation')
     </header>
 
-    <!-- Main Content -->
-    <main class="pt-16 md:pt-20 min-h-screen">
-        @yield('content')
-    </main>
-
     @include('layouts.footer')
 </body>
 </html>
