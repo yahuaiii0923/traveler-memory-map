@@ -22,7 +22,7 @@ class User extends Authenticatable
         'username',
         'email',
         'password',
-        'profile_photo_path',
+        'profile_photo',
     ];
 
     /**
@@ -46,5 +46,15 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    public function memories()
+    {
+        return $this->hasMany(Memory::class);
+    }
+
+    public function testimonials()
+    {
+        return $this->hasMany(Testimonial::class, 'username', 'username');
     }
 }

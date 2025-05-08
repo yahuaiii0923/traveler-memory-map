@@ -9,18 +9,24 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-   public function up()
+
+   public function up(): void
    {
        Schema::table('memories', function (Blueprint $table) {
-//            $table->string('photo')->nullable()->after('description');
-//            $table->string('category')->nullable()->after('photo');
-//            $table->unsignedTinyInteger('rating')->nullable()->after('category');
-//
-           $table->string('location_name')->nullable()->after('description');
-
+           if (!Schema::hasColumn('memories', 'location_name')) {
+               $table->string('location_name')->nullable()->after('description');
+           }
+           if (!Schema::hasColumn('memories', 'photo')) {
+               $table->string('photo')->nullable();
+           }
+           if (!Schema::hasColumn('memories', 'category')) {
+               $table->string('category')->nullable();
+           }
+           if (!Schema::hasColumn('memories', 'rating')) {
+               $table->integer('rating')->nullable();
+           }
        });
    }
-
 
     /**
      * Reverse the migrations.
@@ -28,6 +34,18 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('memories', function (Blueprint $table) {
+            if (Schema::hasColumn('memories', 'location_name')) {
+                $table->dropColumn('location_name');
+            }
+            if (Schema::hasColumn('memories', 'photo')) {
+                $table->dropColumn('photo');
+            }
+            if (Schema::hasColumn('memories', 'category')) {
+                $table->dropColumn('category');
+            }
+            if (Schema::hasColumn('memories', 'rating')) {
+                $table->dropColumn('rating');
+            }
         });
     }
 };
