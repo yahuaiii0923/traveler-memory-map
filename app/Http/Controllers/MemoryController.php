@@ -73,21 +73,24 @@ class MemoryController extends Controller
         ]);
 
         // Save the uploaded photos
-        // Save the uploaded photos
         if ($request->hasFile('photos')) {
             foreach ($request->file('photos') as $photo) {
-                $fileName = $photo->getClientOriginalName();
+                // Generate a unique filename
+                $fileName = time() . '_' . $photo->getClientOriginalName();
+
+                // Move the file to the public/images directory
                 $photo->move(public_path('images'), $fileName);
 
+                // Construct the correct file path
+                $path = 'images/' . $fileName;
 
-                // Remove the 'public/' prefix from the stored path
-                $path = str_replace('public/', '', $path);
+                // Log the path for debugging
+                \Log::info('Stored Photo Path: ' . $path);
 
                 // Create a new photo record linked to the memory
                 Photo::create([
                     'memory_id' => $memory->id,
-                    'file_path' => $path, // Save the cleaned file path
-
+                    'file_path' => $path,
                 ]);
             }
         }

@@ -9,15 +9,12 @@ class Memory extends Model
 {
     use HasFactory;
 
-    protected $fillable = [
-        'title', 'description', 'location_name',
-        'latitude', 'longitude', 'rating', 'user_id'
-    ];
+     protected $fillable = ['title', 'description', 'location_name', 'latitude', 'longitude', 'rating', 'user_id'];
 
-    public function photos()
-    {
-        return $this->hasMany(Photo::class);
-    }
+        public function photos()
+        {
+            return $this->hasMany(Photo::class);
+        }
 
     /**
      * Define the relationship with the User model.

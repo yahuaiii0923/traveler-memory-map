@@ -80,11 +80,18 @@
     }
 
     function getImageUrl(memory) {
-        if (memory.photos && memory.photos.length) {
-            const photoPath = memory.photos[0].file_path;
-            return `{{ asset('storage/${photoPath}') }}`;
+        if (memory.photos && memory.photos.length > 0) {
+            // Get the first photo path from the memory
+            const photoPath = memory.photos[0];
+            console.log('Photo Path:', photoPath); // Debugging
+
+            // Check if the path is not empty or null
+            if (photoPath && photoPath !== 'images/default.png') {
+                return `/${photoPath}`; // Correct relative URL
+            }
         }
-        return "{{ asset('images/default.png') }}";
+        // Return default image if no valid photo is found
+        return "/images/default.png";
     }
 
     function updateYearButtons() {
