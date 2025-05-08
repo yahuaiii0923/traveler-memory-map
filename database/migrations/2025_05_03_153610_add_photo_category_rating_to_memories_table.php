@@ -9,6 +9,7 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
+
    public function up(): void
    {
        Schema::table('memories', function (Blueprint $table) {
@@ -26,8 +27,6 @@ return new class extends Migration
            }
        });
    }
-
-
 
     /**
      * Reverse the migrations.
