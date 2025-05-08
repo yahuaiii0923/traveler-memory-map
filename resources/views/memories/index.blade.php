@@ -37,7 +37,7 @@
         map = new google.maps.Map(document.getElementById('map'), {
             center: { lat: 20, lng: 0 },
             zoom: 3,
-            mapId:'ad19d26bd1eaba5671468b3c',
+            mapId: 'ad19d26bd1eaba5671468b3c',
             mapTypeControl: false,
             mapTypeId: 'roadmap'
         });
@@ -58,14 +58,20 @@
     window.initMap = initMap;
 
     async function createMarker(memory, position) {
-        const imageUrl = await getImageUrl(memory);
+        const imageUrl = getImageUrl(memory);
+        console.log('Marker Image URL:', imageUrl);
+
         const markerElement = document.createElement('div');
-        markerElement.style.width = '50px';
-        markerElement.style.height = '50px';
-        markerElement.style.borderRadius = '50%';
-        markerElement.style.backgroundImage = `url(${imageUrl})`;
-        markerElement.style.backgroundSize = 'cover';
-        markerElement.style.border = '2px solid #374151';
+        markerElement.classList.add('custom-marker');
+
+        const imageElement = document.createElement('img');
+        imageElement.src = imageUrl;
+        imageElement.classList.add('marker-image');
+        imageElement.onerror = () => {
+            imageElement.src = "/images/default.png";  // Fallback if image not found
+        };
+
+        markerElement.appendChild(imageElement);
 
         if (google.maps.marker && google.maps.marker.AdvancedMarkerElement) {
             const marker = new google.maps.marker.AdvancedMarkerElement({
@@ -80,19 +86,15 @@
     }
 
     function getImageUrl(memory) {
-        if (memory.photos && memory.photos.length > 0) {
-            // Get the first photo path from the memory
-            const photoPath = memory.photos[0];
-            console.log('Photo Path:', photoPath); // Debugging
+        if (memory.photos && memory.photos.length) {
+            const photoPath = memory.photos[0].file_path;
+            console.log('Extracted Photo Path:', photoPath);
 
-            // Check if the path is not empty or null
-            if (photoPath && photoPath !== 'images/default.png') {
-                return `/${photoPath}`; // Correct relative URL
-            }
+            // Construct the correct URL format
+            return `/${photoPath}`;
         }
-        // Return default image if no valid photo is found
         return "/images/default.png";
-    }
+    }"/images/default.png";
 
     function updateYearButtons() {
         const yearFilters = document.getElementById("yearFilters");
@@ -112,12 +114,26 @@
 <script async defer src="https://maps.googleapis.com/maps/api/js?key={{ env('GOOGLE_MAPS_API_KEY') }}&callback=initMap&libraries=marker&v=beta"></script>
 
 <style>
-    .scrollbar-hide::-webkit-scrollbar {
-        display: none;
+    .custom-marker {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        overflow: hidden;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: white;
+        border: 3px solid #ffffff;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+        position: absolute;
+        transform: translate(-50%, -50%);
     }
-    .scrollbar-hide {
-        -ms-overflow-style: none;
-        scrollbar-width: none;
+
+    .marker-image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border-radius: 50%;
     }
 </style>
 @endsection

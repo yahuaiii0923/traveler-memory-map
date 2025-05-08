@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Memory;
 use App\Models\Photo;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class MemoryController extends Controller
 {
@@ -25,7 +26,9 @@ class MemoryController extends Controller
                 'id' => $memory->id,
                 'title' => $memory->title,
                 'description' => $memory->description,
-                'photos' => $memory->photos->pluck('file_path'),
+                'photos' => $memory->photos->map(function ($photo) {
+                    return ['file_path' => $photo->file_path];
+                }),
                 'location_name' => $memory->location_name,
                 'rating' => $memory->rating,
                 'latitude' => $memory->latitude,
@@ -42,9 +45,9 @@ class MemoryController extends Controller
                 ->values();
 
         return view('memories.index', [
-                'memories' => $allMemories,  // Pass the original collection
-                'years' => $years
-            ]);
+            'memories' => $allMemories,
+            'years' => $years
+        ]);
     }
 
     // Store method to add a new memory
@@ -58,7 +61,7 @@ class MemoryController extends Controller
             'latitude' => 'nullable|numeric',
             'longitude' => 'nullable|numeric',
             'rating' => 'nullable|integer|min:1|max:5',
-            'photos.*' => 'image|mimes:jpeg,png,jpg,gif|max:2048', // Multiple photo validation
+            'photos.*' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
         // Create the memory
@@ -69,20 +72,21 @@ class MemoryController extends Controller
             'latitude' => $validated['latitude'] ?? null,
             'longitude' => $validated['longitude'] ?? null,
             'rating' => $validated['rating'] ?? null,
-            'user_id' => auth()->id(), // Save the user_id of the logged-in user
+            'user_id' => auth()->id(),
         ]);
 
+        // Store the uploaded photos
         // Save the uploaded photos
         if ($request->hasFile('photos')) {
             foreach ($request->file('photos') as $photo) {
                 // Generate a unique filename
                 $fileName = time() . '_' . $photo->getClientOriginalName();
 
-                // Move the file to the public/images directory
-                $photo->move(public_path('images'), $fileName);
+                // Store the file in the 'images' directory within 'public'
+                $path = $photo->storeAs('images', $fileName, 'public');
 
-                // Construct the correct file path
-                $path = 'images/' . $fileName;
+                // Correct the path to match the public URL format
+                $path = 'storage/' . $path;
 
                 // Log the path for debugging
                 \Log::info('Stored Photo Path: ' . $path);
@@ -90,16 +94,14 @@ class MemoryController extends Controller
                 // Create a new photo record linked to the memory
                 Photo::create([
                     'memory_id' => $memory->id,
-                    'file_path' => $path,
+                    'file_path' => $path, // Save the correct relative file path
                 ]);
             }
         }
 
-
         // Redirect back with a success message
         return redirect()->route('memories.index')->with('success', 'Memory added successfully!');
     }
-
 
     // Create method to display the form
     public function create()
@@ -113,5 +115,4 @@ class MemoryController extends Controller
 
         return view('memories.show', compact('memory'));
     }
-
 }

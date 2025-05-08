@@ -31,8 +31,6 @@ Auth::routes();
 
 // Memory resource routes
 Route::resource('memories', MemoryController::class);
-Route::get('/memories/create', [MemoryController::class, 'create'])->name('memories.create');
-Route::get('/memories/{id}', [MemoryController::class, 'show'])->name('memories.show');
 
 
 Route::get('/test-auth', function () {
