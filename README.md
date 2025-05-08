@@ -93,18 +93,13 @@ Access the application at `http://127.0.0.1:8000`.
 
 ## Screenshots
 
-### Home![WhatsApp Image 2025-05-08 at 07 51 37_71619374](https://github.com/user-attachments/assets/1067f9ea-7564-4271-b0e8-3f536019ea5a)
-e Page
+### Home Page
+![WhatsApp Image 2025-05-08 at 09 03 31_d8bc1581](https://github.com/user-attachments/assets/91a7212e-0930-498b-884c-c9e695fcc234)
 
 
 ### Adding a Memory
-![Add Memory](./screenshots/add_memory.png)
+![WhatsApp Image 2025-05-08 at 07 51 52_cfaf3361](https://github.com/user-attachments/assets/c3962163-6c08-400f-92ba-202490f70657)
 
-### Interactive Map with Markers
-![Map](./screenshots/map.png)
-
-### Filter Memories by Year
-![Year Filter](./screenshots/year_filter.png)
 
 ## Troubleshooting
 
