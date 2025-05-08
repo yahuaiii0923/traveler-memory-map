@@ -174,167 +174,166 @@
 
 
 
-    <script>
-        let map;
-        let allMarkers = [];
-        let startIndex = 0; // Starting index for the year buttons
-        const visibleYearsCount = 2; // Number of years to display along with "All Years"
+<script>
+    let map;
+    let allMarkers = [];
+    let startIndex = 0; // Starting index for the year buttons
+    const visibleYearsCount = 2; // Number of years to display along with "All Years"
 
-        const currentYear = new Date().getFullYear();
-        const years = {!! json_encode($years) !!};
-
-
-        // Ensure the current year is included and the list is sorted in descending order
-        if (!years.includes(currentYear)) {
-            years.unshift(currentYear);
-        }
-        years.sort((a, b) => b - a);
+    const currentYear = new Date().getFullYear();
+    const years = {!! json_encode($years) !!};
 
 
-        async function getImageUrl(memory) {
-            const defaultUrl = "/images/default.png";
-            const extensions = ["jpg", "png", "jpeg", "gif", "webp"];
+    // Ensure the current year is included and the list is sorted in descending order
+    if (!years.includes(currentYear)) {
+        years.unshift(currentYear);
+    }
+    years.sort((a, b) => b - a);
 
-            if (memory.photos && memory.photos.length) {
-                let photoName = memory.photos[0];
 
-                // Clean up the file name from extra prefixes and extensions
-                photoName = photoName.replace(/^images\//, '').replace(/\.[^/.]+$/, "");
+    async function getImageUrl(memory) {
+        const defaultUrl = "/images/default.png";
+        const extensions = ["jpg", "png", "jpeg", "gif", "webp"];
 
-                for (const ext of extensions) {
-                    const imagePath = `/images/${photoName}.${ext}`;
-                    const isValid = await validateImageUrl(imagePath);
-                    if (isValid) {
-                        return imagePath;
-                    }
+        if (memory.photos && memory.photos.length) {
+            let photoName = memory.photos[0];
+            // Remove any leading slash if present
+            photoName = photoName.replace(/^\/+/, '');
+
+            for (const ext of extensions) {
+                const imagePath = `/storage/${photoName}`;
+                const isValid = await validateImageUrl(imagePath);
+                if (isValid) {
+                    return imagePath;
                 }
             }
-            return defaultUrl;
+        }
+        return defaultUrl;
+    }
+
+    function validateImageUrl(url) {
+        return new Promise((resolve) => {
+            const img = new Image();
+            img.onload = () => resolve(true);
+            img.onerror = () => resolve(false);
+            img.src = url;
+        });
+    }
+
+    async function createMarker(memory, position) {
+        const imageUrl = await getImageUrl(memory);
+
+        const markerElement = document.createElement("div");
+        markerElement.classList.add("custom-marker");
+
+        const markerImage = document.createElement("img");
+        markerImage.classList.add("marker-image");
+        markerImage.src = imageUrl;
+        markerElement.appendChild(markerImage);
+
+        const marker = new google.maps.marker.AdvancedMarkerElement({
+            position: position,
+            map: map,
+            content: markerElement
+        });
+
+        marker.memoryYear = new Date(memory.created_at).getFullYear();
+        allMarkers.push(marker);
+    }
+
+    function filterMarkers(year) {
+        allMarkers.forEach(marker => {
+            const markerYear = marker.memoryYear;
+            marker.map = (year === 'all' || markerYear === parseInt(year)) ? map : null;
+        });
+    }
+    function initMap() {
+        map = new google.maps.Map(document.getElementById("map"), {
+            zoom: 3,
+            center: { lat: 20, lng: 0 },
+            mapId: "{{ env('GOOGLE_MAPS_MAP_ID') }}",
+            mapTypeControl: false,  // Disable the default Map/Satellite toggle
+            mapTypeId: "roadmap"    // Set the default map type
+        });
+
+        const memories = {!! json_encode($memories) !!};
+        const bounds = new google.maps.LatLngBounds();
+
+        memories.forEach(async (memory) => {
+            const position = new google.maps.LatLng(parseFloat(memory.latitude), parseFloat(memory.longitude));
+            await createMarker(memory, position);
+            bounds.extend(position);
+        });
+
+        if (!bounds.isEmpty()) {
+            map.fitBounds(bounds);
         }
 
-        function validateImageUrl(url) {
-            return new Promise((resolve) => {
-                const img = new Image();
-                img.onload = () => resolve(true);
-                img.onerror = () => resolve(false);
-                img.src = url;
-            });
-        }
+        // Add the floating button for switching map types and hiding POI
+        addMapTypeToggleButton();
+    }
 
-        async function createMarker(memory, position) {
-            const imageUrl = await getImageUrl(memory);
+    function addMapTypeToggleButton() {
+        const button = document.createElement("div");
+        button.classList.add("map-type-button");
+        button.textContent = "POI Hidden";
+        button.onclick = togglePOI;
 
-            const markerElement = document.createElement("div");
-            markerElement.classList.add("custom-marker");
+        map.controls[google.maps.ControlPosition.TOP_RIGHT].push(button);
+    }
 
-            const markerImage = document.createElement("img");
-            markerImage.classList.add("marker-image");
-            markerImage.src = imageUrl;
-            markerElement.appendChild(markerImage);
-
-            const marker = new google.maps.marker.AdvancedMarkerElement({
-                position: position,
-                map: map,
-                content: markerElement
-            });
-
-            marker.memoryYear = new Date(memory.created_at).getFullYear();
-            allMarkers.push(marker);
-        }
-
-        function filterMarkers(year) {
-            allMarkers.forEach(marker => {
-                const markerYear = marker.memoryYear;
-                marker.map = (year === 'all' || markerYear === parseInt(year)) ? map : null;
-            });
-        }
-        function initMap() {
-            map = new google.maps.Map(document.getElementById("map"), {
-                zoom: 3,
-                center: { lat: 20, lng: 0 },
-                mapId: "{{ env('GOOGLE_MAPS_MAP_ID') }}",
-                mapTypeControl: false,  // Disable the default Map/Satellite toggle
-                mapTypeId: "roadmap"    // Set the default map type
-            });
-
-            const memories = {!! json_encode($memories) !!};
-            const bounds = new google.maps.LatLngBounds();
-
-            memories.forEach(async (memory) => {
-                const position = new google.maps.LatLng(parseFloat(memory.latitude), parseFloat(memory.longitude));
-                await createMarker(memory, position);
-                bounds.extend(position);
-            });
-
-            if (!bounds.isEmpty()) {
-                map.fitBounds(bounds);
+    function togglePOI() {
+        const poiStyles = [
+            {
+                featureType: "poi",
+                stylers: [{ visibility: "off" }]
+            },
+            {
+                featureType: "transit",
+                stylers: [{ visibility: "off" }]
             }
+        ];
 
-            // Add the floating button for switching map types and hiding POI
-            addMapTypeToggleButton();
+        const defaultStyles = [];
+
+        if (map.get("styles")) {
+            map.set("styles", defaultStyles); // Show POIs
+            this.textContent = "POI Hidden";
+        } else {
+            map.set("styles", poiStyles); // Hide POIs
+            this.textContent = "Map";
         }
+    }
 
-        function addMapTypeToggleButton() {
-            const button = document.createElement("div");
-            button.classList.add("map-type-button");
-            button.textContent = "POI Hidden";
-            button.onclick = togglePOI;
+    function updateYearButtons() {
+        const yearFilters = document.getElementById("yearFilters");
+        yearFilters.innerHTML = ""; // Clear existing buttons
 
-            map.controls[google.maps.ControlPosition.TOP_RIGHT].push(button);
+        // Always show the "All Years" button
+        yearFilters.innerHTML += `<button onclick="filterMarkers('all')">All Years</button>`;
+
+        // Show the next set of years based on the current index
+        for (let i = startIndex; i < Math.min(startIndex + visibleYearsCount, years.length); i++) {
+            yearFilters.innerHTML += `<button onclick="filterMarkers(${years[i]})">${years[i]}</button>`;
         }
+    }
 
-        function togglePOI() {
-            const poiStyles = [
-                {
-                    featureType: "poi",
-                    stylers: [{ visibility: "off" }]
-                },
-                {
-                    featureType: "transit",
-                    stylers: [{ visibility: "off" }]
-                }
-            ];
-
-            const defaultStyles = [];
-
-            if (map.get("styles")) {
-                map.set("styles", defaultStyles); // Show POIs
-                this.textContent = "POI Hidden";
-            } else {
-                map.set("styles", poiStyles); // Hide POIs
-                this.textContent = "Map";
-            }
+    function scrollYears(direction) {
+        if (direction === 1 && startIndex + visibleYearsCount < years.length) {
+            startIndex++;
+        } else if (direction === -1 && startIndex > 0) {
+            startIndex--;
         }
+        updateYearButtons();
+    }
 
-        function updateYearButtons() {
-            const yearFilters = document.getElementById("yearFilters");
-            yearFilters.innerHTML = ""; // Clear existing buttons
-
-            // Always show the "All Years" button
-            yearFilters.innerHTML += `<button onclick="filterMarkers('all')">All Years</button>`;
-
-            // Show the next set of years based on the current index
-            for (let i = startIndex; i < Math.min(startIndex + visibleYearsCount, years.length); i++) {
-                yearFilters.innerHTML += `<button onclick="filterMarkers(${years[i]})">${years[i]}</button>`;
-            }
-        }
-
-        function scrollYears(direction) {
-            if (direction === 1 && startIndex + visibleYearsCount < years.length) {
-                startIndex++;
-            } else if (direction === -1 && startIndex > 0) {
-                startIndex--;
-            }
-            updateYearButtons();
-        }
-
-        window.onload = function () {
-            updateYearButtons();
-        };
+    window.onload = function () {
+        updateYearButtons();
+    };
 
 
 
-    </script>
+</script>
 
 <script async defer
         src="https://maps.googleapis.com/maps/api/js?key={{ env('GOOGLE_MAPS_API_KEY') }}&libraries=marker&callback=initMap">
