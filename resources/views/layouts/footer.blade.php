@@ -1,5 +1,9 @@
+<main class="flex-1">
+    @yield('content')
+</main>
+
 <footer class="bg-[#374151] text-[#f5f0e9] py-8">
-    <div class="container mx-auto px-4">
+    <div class="container px-4 mb-12">
         <div class="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
             <!-- Brand & Copyright -->
             <div class="text-center md:text-left">

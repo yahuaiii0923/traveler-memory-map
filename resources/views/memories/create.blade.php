@@ -1,8 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-{{-- Changed container margin from my-8 to mt-8 mb-24 for footer space --}}
-<div class="container mx-auto mt-8 mb-24 p-12 bg-[#dbd3c8]/30 shadow-2xl rounded-3xl border border-[#dbd3c8] max-w-4xl relative">
+<div class="container mx-auto mt-28 mb-40 p-12 bg-[#dbd3c8]/30 shadow-2xl rounded-3xl border border-[#dbd3c8] max-w-4xl relative">
     <!-- Back button with journal feel -->
     <a href="{{ route('memories.index') }}"
        class="absolute left-8 top-8 text-[#374151] hover:text-[#aee2e8] font-medium transition-all text-3xl">
@@ -76,8 +75,7 @@
             const locationInput = document.getElementById('location_name');
             if (locationInput) {
                 autocomplete = new google.maps.places.Autocomplete(locationInput, {
-                    types: ['geocode'],
-                    componentRestrictions: { country: 'ie' }
+                    types: ['geocode'], // Allow any geographic location
                 });
                 autocomplete.addListener('place_changed', function () {
                     const place = autocomplete.getPlace();
