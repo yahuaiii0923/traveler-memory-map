@@ -93,8 +93,9 @@ Access the application at `http://127.0.0.1:8000`.
 
 ## Screenshots
 
-### Home Page
-![Screenshot 2025-05-08 014655](https://github.com/user-attachments/assets/0f4dd4fe-8274-4b1c-8531-ef7854b8b868)
+### Home![WhatsApp Image 2025-05-08 at 07 51 37_71619374](https://github.com/user-attachments/assets/1067f9ea-7564-4271-b0e8-3f536019ea5a)
+e Page
+
 
 ### Adding a Memory
 ![Add Memory](./screenshots/add_memory.png)
