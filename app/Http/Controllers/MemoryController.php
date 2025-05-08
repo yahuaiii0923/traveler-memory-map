@@ -22,6 +22,7 @@ class MemoryController extends Controller
 
         $memories = $allMemories->map(function ($memory) {
             return [
+                'id' => $memory->id,
                 'title' => $memory->title,
                 'description' => $memory->description,
                 'photos' => $memory->photos->pluck('file_path'),
@@ -72,18 +73,25 @@ class MemoryController extends Controller
         ]);
 
         // Save the uploaded photos
+        // Save the uploaded photos
         if ($request->hasFile('photos')) {
             foreach ($request->file('photos') as $photo) {
                 $fileName = $photo->getClientOriginalName();
                 $photo->move(public_path('images'), $fileName);
 
-                // Store the relative path with a forward slash
+
+                // Remove the 'public/' prefix from the stored path
+                $path = str_replace('public/', '', $path);
+
+                // Create a new photo record linked to the memory
                 Photo::create([
                     'memory_id' => $memory->id,
-                    'file_path' => 'images/' . $fileName, // Corrected the path
+                    'file_path' => $path, // Save the cleaned file path
+
                 ]);
             }
         }
+
 
         // Redirect back with a success message
         return redirect()->route('memories.index')->with('success', 'Memory added successfully!');
@@ -95,4 +103,12 @@ class MemoryController extends Controller
     {
         return view('memories.create');
     }
+
+    public function show($id)
+    {
+        $memory = Memory::with('photos')->findOrFail($id);
+
+        return view('memories.show', compact('memory'));
+    }
+
 }

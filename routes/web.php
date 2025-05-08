@@ -12,6 +12,7 @@ use App\Http\Controllers\DashboardController;
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/home', [HomeController::class, 'index']);
 
+
 Route::middleware(['auth'])->group(function () {
     Route::get('/profile', [ProfileController::class, 'index'])->name('profile.index');
     Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -31,6 +32,8 @@ Auth::routes();
 // Memory resource routes
 Route::resource('memories', MemoryController::class);
 Route::get('/memories/create', [MemoryController::class, 'create'])->name('memories.create');
+Route::get('/memories/{id}', [MemoryController::class, 'show'])->name('memories.show');
+
 
 Route::get('/test-auth', function () {
     return Auth::check() ? 'User is logged in: '.Auth::user()->name : 'Not logged in';
@@ -42,3 +45,4 @@ Route::post('/contact', function (Request $request) {
     return redirect()->back()->with('message', 'Your message has been sent!');
 })->name('contact.submit');
 Route::view('/privacy', 'privacy')->name('privacy');
+

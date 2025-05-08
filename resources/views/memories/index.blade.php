@@ -37,6 +37,7 @@
         map = new google.maps.Map(document.getElementById('map'), {
             center: { lat: 20, lng: 0 },
             zoom: 3,
+            mapId:'ad19d26bd1eaba5671468b3c',
             mapTypeControl: false,
             mapTypeId: 'roadmap'
         });
@@ -52,34 +53,37 @@
         if (!bounds.isEmpty()) {
             map.fitBounds(bounds);
         }
+        updateYearButtons();
     }
+    window.initMap = initMap;
 
     async function createMarker(memory, position) {
         const imageUrl = await getImageUrl(memory);
+        const markerElement = document.createElement('div');
+        markerElement.style.width = '50px';
+        markerElement.style.height = '50px';
+        markerElement.style.borderRadius = '50%';
+        markerElement.style.backgroundImage = `url(${imageUrl})`;
+        markerElement.style.backgroundSize = 'cover';
+        markerElement.style.border = '2px solid #374151';
 
-        const marker = new google.maps.Marker({
-            position: position,
-            map: map,
-            title: memory.title,
-            icon: {
-                url: imageUrl,
-                scaledSize: new google.maps.Size(40, 40),
-                origin: new google.maps.Point(0, 0),
-                anchor: new google.maps.Point(20, 20),
-            }
-        });
-
-        marker.memoryYear = new Date(memory.created_at).getFullYear();
-        allMarkers.push(marker);
+        if (google.maps.marker && google.maps.marker.AdvancedMarkerElement) {
+            const marker = new google.maps.marker.AdvancedMarkerElement({
+                map: map,
+                position: position,
+                title: memory.title,
+                content: markerElement,
+            });
+            marker.memoryYear = new Date(memory.created_at).getFullYear();
+            allMarkers.push(marker);
+        }
     }
 
     function getImageUrl(memory) {
         if (memory.photos && memory.photos.length) {
-            const photoPath = memory.photos[0];
-            // Use a relative URL correctly
-            return `/${photoPath}`;
+            const photoPath = memory.photos[0].file_path;
+            return `{{ asset('storage/${photoPath}') }}`;
         }
-        // Default image if no photo is found
         return "{{ asset('images/default.png') }}";
     }
 
@@ -93,18 +97,12 @@
 
     function filterMarkers(year) {
         allMarkers.forEach(marker => {
-            const markerYear = marker.memoryYear;
-            marker.setMap((year === 'all' || markerYear === parseInt(year)) ? map : null);
+            marker.setMap((year === 'all' || marker.memoryYear === parseInt(year)) ? map : null);
         });
     }
-
-    window.onload = function () {
-        updateYearButtons();
-        initMap();
-    };
 </script>
 
-<script async defer src="https://maps.googleapis.com/maps/api/js?key={{ env('GOOGLE_MAPS_API_KEY') }}&callback=initMap"></script>
+<script async defer src="https://maps.googleapis.com/maps/api/js?key={{ env('GOOGLE_MAPS_API_KEY') }}&callback=initMap&libraries=marker&v=beta"></script>
 
 <style>
     .scrollbar-hide::-webkit-scrollbar {
