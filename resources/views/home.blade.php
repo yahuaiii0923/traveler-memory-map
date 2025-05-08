@@ -220,9 +220,6 @@
                         </div>
 
                         <div class="text-center mt-10 col-span-full">
-                            <a href="{{ route('testimonials.index') }}" class="text-[#11bdbd] hover:underline font-medium mr-4">
-                                → View all testimonials
-                            </a>
                             <a href="{{ route('testimonials.create') }}" class="text-[#11bdbd] hover:underline font-medium">
                                 → Share your own testimonial
                             </a>
