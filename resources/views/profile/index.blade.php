@@ -27,7 +27,7 @@
                     <div class="p-4 bg-[#dbd3c8]/20 rounded-lg hover:shadow-md transition-all">
                         <h3 class="text-xl font-semibold text-[#374151]">{{ $memory->title }}</h3>
                         <p class="text-gray-700">{{ Str::limit($memory->description, 100) }}</p>
-                        <a href="{{ route('memories.show', $memory->slug) }}" class="text-[#11bdbd] hover:underline">View Memory</a>
+                        <a href="{{ route('memories.show', $memory) }}" class="text-[#11bdbd] hover:underline">View Memory</a>
                     </div>
                 @endforeach
             </div>
